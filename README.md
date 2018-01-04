@@ -1,4 +1,4 @@
-# batch_hillshader
+# Batch Hillshader
 
 QGIS minimum version = 2.8
 
@@ -12,6 +12,8 @@ This plugin generates a three light exposure hillshade (shaded relief by combini
 LiDAR classified data (ASPRS classification / *.laz, *.las formats) or a Digital Terrain Model (DTM) in raster format 
 (GEOTiff / ASCII). The output file (three light exposure hillshade) is generated in GEOTiff format and users can save the 
 intermediate processing results. This plugin allows users to process more than one file in the same process.
+
+![image](https://github.com/PANOimagen/batch_hillshader/blob/master/icons/icon.png?raw=true)
 
 If you uses as input LiDAR data, note that plugin uses LASTools library.
         See LASTools License at: https://rapidlasso.com/lastools/
@@ -27,6 +29,8 @@ The three light exposures combining method is based in Gantenbein (2012).
   (https://pubs.usgs.gov/of/2012/1171/pdf/usgs_of2012-1171-Gantenbein_p101-106.pdf) (Consult date-time: 2017/10/24 - 18:25 p.m.)
 
 KeyWords = Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshade Processing, Three Exposure Hillshade
+
+
 
 Batch Hillshader license:
 
@@ -44,3 +48,5 @@ Batch Hillshader license:
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+![image](https://github.com/PANOimagen/batch_hillshader/blob/master/icons/PANOiFullHD.png?raw=true)
