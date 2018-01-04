@@ -10,7 +10,7 @@
 name=Batch Hillshader
 qgisMinimumVersion=2.8
 description= Plugin to generate a three light exposure hillshade (shaded relief by combining three light exposures)
-version=2.01.85
+version=2.01.90
 author=PANOimagen S.L.
 email=info@panoimagen.com
 
@@ -35,7 +35,7 @@ tags=Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshad
 homepage= https://github.com/PANOimagen/batch_hillshader
 tracker=https://github.com/PANOimagen/batch_hillshader/issues
 repository=https://github.com/PANOimagen/batch_hillshader
-category=Plugins
+category=Raster
 icon=icon.png
 # experimental flag
 experimental=True
