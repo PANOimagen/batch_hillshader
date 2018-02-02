@@ -59,21 +59,59 @@ class DlgAbout(QDialog, FormClass):
         QDialog.__init__(self, parent)
         self.setupUi(self)
         
-        repository_info = (u'Code repository: https://github.com/PANOimagen/batch_hillshader\nBug Tracker: https://github.com/PANOimagen/batch_hillshader/issues')
+        repo_url = (u'<address><b>https://github.com/PANOimagen/' +
+                    u'batch_hillshader</address></b>')
+
+        tracker_url = (u'<address><b>https://github.com/PANOimagen/' +
+                       u'batch_hillshader/issues</address></b><br>')
+
+        panoi_url = u'<address><b>www.panoimagen.com</address></b><br>'
         
-        contact_info = (u'Copyright: (C) 2017 by PANOimagen S.L.\nPANOimagen S.L. La Rioja (Spain)\nwww.panoimagen.com')
+        repository_info = (u'Code repository: {}<br>Bug Tracker: {}'.format(
+                repo_url, tracker_url))
         
-        plugin_description = (u'This plugin has being developed by PANOimagen S.L. and serves to\ngenerate a three light exposure hillshade (shaded relief by combining\nthree light exposures).\nFor more information, please, read metadata/readme and/or contact the author.')
+        contact_info = (u'<h3>Copyright (C) 2017  by PANOimagen S.L.</h3>' +
+                        u'PANOimagen S.L. La Rioja (Spain) -- {}'.format(
+                                panoi_url))      
+        plugin_description = ('This plugin has being developed by PANOimagen' +
+                              u' S.L. and serves to generate a three light' +
+                              u' exposure<br>hillshade (shaded relief by' +
+                              u' combining three light exposures).\nFor more' +
+                              u' information, please, read<br>metadata/' +
+                              u'readme and/or contact the author.')
         
-        external_dependencies = (u'This plugin needs the Processing Plugin and uses external libraries for\nLiDAR processing mode, see the corresponding licenses:\n        + LASTools Library\n        + FUSION LDV Software')
+        external_dependencies = ('This plugin needs the <b>Processing' +
+                                 u' Plugin</b> and uses external libraries' +
+                                 u' for LiDAR processing mode,<br>see the' 
+                                 u' corresponding licenses:<br>        +' +
+                                 u' LASTools Library: <b><address>' +
+                                 u'https://rapidlasso.com/lastools/' +
+                                 u'</address></b> <br>        + FUSION' +
+                                 u' LDV Software: <b><address>http://forsys.' +
+                                 u'cfr.washington.edu/fusion.html' +
+                                 u'</address></b>')
         
-        license_info = 'This program is free software: you can redistribute it and/or modify it\nunder the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.'
-        
+        license_info = (u'<h3>License:' +
+                        u'</h3>This program is free software' +
+                        u' you can redistribute it and/or modify it under' +
+                        u' the terms of the GNU General<br>Public License as' +
+                        u' published by the Free Software Foundation, either' +
+                        u' version 3 of the License, or (at your<br>option)' +
+                        u' any later version.<br><br>This program is' +
+                        u' distributed in the hope that it will be useful,' +
+                        u' but WITHOUT ANY WARRANTY; without even<br>the' +
+                        u' implied warranty of MERCHANTABILITY or FITNESS' +
+                        u' FOR A PARTICULAR PURPOSE.  See the GNU General' +
+                        u'<br>Public License for more details.<br><br>' +
+                        u'You should have received a copy of the GNU' +
+                        u' General Public License along with this program.' +
+                        u' If not, see:<br><address><b>https://www.gnu.org/' +
+                        u'licenses/</address></b>.')        
         self.codeRepoLabel.setText(repository_info)
         self.contactLabel.setText(contact_info)
         self.descriptionLabel.setText(plugin_description)
         self.libraryUsedLabel.setText(external_dependencies)
         self.licenseLabel.setText(license_info)
-        self.versionLabel.setText('Batch Hillshader version {}'.format(
-                version.VERSION))
-
+        self.versionLabel.setText(u'<h2>Batch Hillshader<\h2>' +
+                                  u' Version {}'.format(
+                                          version.VERSION))
