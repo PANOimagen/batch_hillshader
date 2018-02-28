@@ -41,7 +41,7 @@ from __future__ import unicode_literals
 from osgeo import gdal, osr
 import osgeo.gdalnumeric as gnum
 from osgeo import gdalconst
-from qgis.core import QgsRasterLayer, QgsMapLayerRegistry
+from qgis.core import QgsRasterLayer, QgsProject
 
 def raster_2_array(raster_full_path):
     """Read a raster dtm as array
@@ -65,7 +65,10 @@ def array_2_raster(raster_array, input_template_path, output_path,
 
     raster = gdal.Open(input_template_path)
 #    data_driver = raster.GetDriver() # Sometimes doesn't work
-    data_driver = gdal.GetDriverByName(b"GTiff")
+    try:
+        data_driver = gdal.GetDriverByName("GTiff") # for QGIS3
+    except TypeError:
+        data_driver = gdal.GetDriverByName(b"GTiff") # for QGIS2
     data_set_geotransform = raster.GetGeoTransform()
     data_set_origin_x = data_set_geotransform[0]
     data_set_origin_y = data_set_geotransform[3]
@@ -96,4 +99,8 @@ def load_raster_layer(raster_full_path, raster_filename):
         """
         rlayer = QgsRasterLayer(raster_full_path,
                 raster_filename)
-        QgsMapLayerRegistry.instance().addMapLayer(rlayer)
+        try:
+            from qgis.core import QgsMapLayerRegistry
+            QgsMapLayerRegistry.instance().addMapLayer(rlayer)
+        except ImportError:
+            QgsProject.instance().addMapLayer(rlayer)            

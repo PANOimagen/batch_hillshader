@@ -1,27 +1,48 @@
-First of all it's necesary activate the Processing plugin that allows the processing options. (Plugins > Manage and install plugins... > Processing)
+For processing LiDAR data (allways in ASPRS format [*.laz, and *.las]) you must to install some external dependecies:
 
-If you have activated the Processing Plugin and the Batch Hillshader plugin does not detect it, restart QGIS
+You can use LasPy Library (BSD License) to generate a three exposure hillshade from *.las ASPRS format:
 
-# LASTools Library:
+    To install LasPy Library, you must launch the following line at OSGEO Shell:
 
-    Read the following lines that describes the steps for install and activate LASTools Library. 
+        > python -m pip install laspy
+    
+    LasPy documentation is avaible at:
+    
+        https://github.com/laspy/laspy
 
-    First of all, please read the LASTools License, you cant see at <https://rapidlasso.com/lastools/>
-    and download the installer from the LASTools Library web site (<https://rapidlasso.com/lastools/>).
+    If you need to process compressed LiDAR data [*.laz format] and you want to use Free Open Source Software you can unzip laz format to las format using LasZip Library:
+    LasZip is LGPL License and you can found it at: https://www.laszip.org/
 
-    Once the library is installed, open the LASTools folder, open the QGIS_toolbox folder and follow the steps 
-    that are described in README.txt file.
+    
+    
+    
+    
+The other options you have, is to process directly *.laz format LiDAR file using LASTools Libray and FUSION LDV, to use this softwares:
 
-    The last step is to activate the library in QGIS. Open QGIS, go to "Processing options" in menu "Processing > Options".
-    Next expand Providers, Tools for LiDAR data, check the Activate option Check Box and set the folder of LASTools installation.
+    First of all it's necesary activate the Processing plugin that allows the processing options. (Plugins > Manage and install plugins... > Processing)
 
-# FUSION LDV:
+    If you have activated the Processing Plugin and the Batch Hillshader plugin does not detect it, restart QGIS
 
-    Read the following lines that describes the steps for install and activate FUSION LDV.
+    # LASTools Library:
 
-    First of all, please read the FUSION LDV License, you cant see at <http://forsys.cfr.washington.edu/fusion.html>
-    and download the installer from the FUSION LDV website (<http://forsys.cfr.washington.edu/fusion.html>).
+        Read the following lines that describes the steps for install and activate LASTools Library. 
 
-    Once the software is installed, activate it in QGIS as like as LASTools Library. Open QGIS, go to "Processing options" 
-    in menu "Processing > Options". Next expand Providers, Tools for LiDAR data, check the Activate option Check Box and set 
-    the folder of FUSION LDV installation.
+        First of all, please read the LASTools License, you cant see at <https://rapidlasso.com/lastools/>
+        and download the installer from the LASTools Library web site (<https://rapidlasso.com/lastools/>).
+
+        Once the library is installed, open the LASTools folder, open the QGIS_toolbox folder and follow the steps 
+        that are described in README.txt file.
+
+        The last step is to activate the library in QGIS. Open QGIS, go to "Processing options" in menu "Processing > Options".
+        Next expand Providers, Tools for LiDAR data, check the Activate option Check Box and set the folder of LASTools installation.
+
+    # FUSION LDV:
+
+        Read the following lines that describes the steps for install and activate FUSION LDV.
+
+        First of all, please read the FUSION LDV License, you cant see at <http://forsys.cfr.washington.edu/fusion.html>
+        and download the installer from the FUSION LDV website (<http://forsys.cfr.washington.edu/fusion.html>).
+
+        Once the software is installed, activate it in QGIS as like as LASTools Library. Open QGIS, go to "Processing options" 
+        in menu "Processing > Options". Next expand Providers, Tools for LiDAR data, check the Activate option Check Box and set 
+        the folder of FUSION LDV installation.

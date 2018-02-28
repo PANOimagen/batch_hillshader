@@ -151,12 +151,12 @@ class DTMProcessTestCase(unittest.TestCase):
         pass
 
 def qgis_app_init():
-    from PyQt4 import QtGui
+    from qgis.PyQt import QtWidgets
     import os
     import atexit
     atexit.register(QgsApplication.exitQgis)
 
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     qgis_prefix = os.getenv("QGIS_PREFIX_PATH")
     # Initialize qgis libraries
     QgsApplication.setPrefixPath(qgis_prefix, True)

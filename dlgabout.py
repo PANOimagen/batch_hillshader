@@ -37,20 +37,21 @@
  ***************************************************************************/
 """
 
-from __future__ import unicode_literals
-from PyQt4 import uic
-from PyQt4.QtGui import QDialog
+
+from qgis.PyQt import uic
+from qgis.PyQt.QtWidgets import QDialog
 
 import platform
 import os
 
 try:
-    import version
+    from . import version
 except ImportError:
     class version(object):
         VERSION = "devel"
 
-uiFilePath = os.path.abspath(os.path.join(os.path.dirname(__file__), 'dlgabout.ui'))
+uiFilePath = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), 'dlgabout.ui'))
 FormClass = uic.loadUiType(uiFilePath)[0]
 
 class DlgAbout(QDialog, FormClass):
@@ -58,7 +59,7 @@ class DlgAbout(QDialog, FormClass):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
         self.setupUi(self)
-        
+
         repo_url = (u'<address><b>https://github.com/PANOimagen/' +
                     u'batch_hillshader</address></b>')
 
@@ -72,7 +73,8 @@ class DlgAbout(QDialog, FormClass):
         
         contact_info = (u'<h3>Copyright (C) 2017  by PANOimagen S.L.</h3>' +
                         u'PANOimagen S.L. La Rioja (Spain) -- {}'.format(
-                                panoi_url))      
+                                panoi_url))
+                                
         plugin_description = ('This plugin has being developed by PANOimagen' +
                               u' S.L. and serves to generate a three light' +
                               u' exposure<br>hillshade (shaded relief by' +
@@ -89,6 +91,9 @@ class DlgAbout(QDialog, FormClass):
                                  u'</address></b> <br>        + FUSION' +
                                  u' LDV Software: <b><address>http://forsys.' +
                                  u'cfr.washington.edu/fusion.html' +
+                                 u'</address></b><br>Also you can use <b>LasPy ' +
+                                 u' Library</b> (BSD License):<b><address>' +
+                                 u'https://github.com/laspy/laspy' +
                                  u'</address></b>')
         
         license_info = (u'<h3>License:' +

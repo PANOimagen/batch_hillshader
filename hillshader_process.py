@@ -36,14 +36,14 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/> *
  ***************************************************************************/
 """
-from __future__ import unicode_literals, print_function
+
 import os
 
-import hillshade as hill
-import bandCalc
-from plugin_utils import lidar_process_funs as lidar_funs
-from plugin_utils import raster_funs
-from plugin_utils import files_and_dirs_funs
+from . import hillshade as hill
+from . import bandCalc
+from .plugin_utils import lidar_process_funs as lidar_funs
+from .plugin_utils import raster_funs
+from .plugin_utils import files_and_dirs_funs
 
 class LiDAR2DTM(object):
 
@@ -206,7 +206,7 @@ class HillshaderDTM(object):
                                       hillshade2_filename: hillshade2,
                                       hillshade3_filename: hillshade3}
 
-            for k, v in self.partial_hills_dic.iteritems():
+            for k, v in self.partial_hills_dic.items():
                 raster_funs.load_raster_layer(v, k)
 
         three_exp_array = bandCalc.merge_arrays(

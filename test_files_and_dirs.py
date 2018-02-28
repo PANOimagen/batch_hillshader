@@ -60,7 +60,7 @@ class FilesAndDirsTestCase(unittest.TestCase):
         self.dir_path_utils.set_temp_dir()
         self.assertIsNotNone(self.dir_path_utils.temp_dirs)
 
-        for k, v in self.dir_path_utils.temp_dirs.iteritems():
+        for k, v in self.dir_path_utils.temp_dirs.items():
             self.dir_path_utils.create_dir(v)
             self.assertTrue(os.path.exists(v))
 
@@ -69,7 +69,7 @@ class FilesAndDirsTestCase(unittest.TestCase):
         self.dir_path_utils.set_temp_dir()
         self.assertIsNotNone(self.dir_path_utils.temp_dirs)
 
-        for k, v in self.dir_path_utils.temp_dirs.iteritems():
+        for k, v in self.dir_path_utils.temp_dirs.items():
             self.dir_path_utils.create_dir(v)
             self.dir_path_utils.remove_temp_dir(v)
             self.assertFalse(os.path.exists(v))
@@ -79,11 +79,11 @@ class FilesAndDirsTestCase(unittest.TestCase):
         self.dir_path_utils.set_output_dir(out_path)
         self.assertIsNotNone(self.dir_path_utils.out_dirs)
 
-        for k, v in self.dir_path_utils.out_dirs.iteritems():
+        for k, v in self.dir_path_utils.out_dirs.items():
             self.dir_path_utils.create_dir(v)
             self.assertTrue(os.path.exists(v))
 
-        for k, v in self.dir_path_utils.out_full_paths.iteritems():
+        for k, v in self.dir_path_utils.out_full_paths.items():
             self.assertIsNotNone(v)
 
     def tearDown(self):
@@ -91,12 +91,12 @@ class FilesAndDirsTestCase(unittest.TestCase):
 
 
 def qgis_app_init():
-    from PyQt4 import QtGui
+    from qgis.PyQt import QtWidgets
     import os
     import atexit
     atexit.register(QgsApplication.exitQgis)
 
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     qgis_prefix = os.getenv("QGIS_PREFIX_PATH")
     # Initialize qgis libraries
     QgsApplication.setPrefixPath(qgis_prefix, True)

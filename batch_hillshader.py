@@ -36,17 +36,18 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/> *
  ***************************************************************************/
 """
-from __future__ import unicode_literals
 
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon
+
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
+from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtGui import QIcon
 
 import os.path
 # Initialize Qt resources from file resources.py
-import resources
+from . import resources
 # Import the code for the dialog
-from batch_hillshader_dialog import batchHillshaderDialog
-from dlgabout import DlgAbout
+from .batch_hillshader_dialog import batchHillshaderDialog
+from .dlgabout import DlgAbout
 
 class batchHillshader:
     """QGIS Plugin Implementation."""
@@ -81,10 +82,10 @@ class batchHillshader:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Batch Hillshader')
+        self.menu = self.tr('&Batch Hillshader')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'Batch Hillshader')
-        self.toolbar.setObjectName(u'Batch Hillshader')
+        self.toolbar = self.iface.addToolBar('Batch Hillshader')
+        self.toolbar.setObjectName('Batch Hillshader')
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -184,7 +185,7 @@ class batchHillshader:
         icon_path = ':/plugins/batch_hillshader/icons/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Batch Hillshader'),
+            text=self.tr('Batch Hillshader'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -192,7 +193,7 @@ class batchHillshader:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&Batch Hillshader'),
+                self.tr('&Batch Hillshader'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
