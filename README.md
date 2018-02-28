@@ -1,6 +1,7 @@
 # Batch Hillshader
 
 QGIS minimum version = 2.8
+
 QGIS maximum version = 3.99
 
 Author = **PANOimagen S.L.**
