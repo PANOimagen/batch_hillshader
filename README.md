@@ -1,10 +1,11 @@
 # Batch Hillshader
 
 QGIS minimum version = 2.8
+QGIS maximum version = 3.99
 
-Author = PANOimagen S.L.
+Author = **PANOimagen S.L.**
 
-e-mail = info@panoimagen.com
+e-mail = *info@panoimagen.com*
 
 Plugin to generate a three light exposure hillshade (shaded relief by combining three light exposures)
 
@@ -13,14 +14,6 @@ LiDAR classified data (ASPRS classification / *.laz, *.las formats) or a Digital
 (GEOTiff / ASCII). The output file (three light exposure hillshade) is generated in GEOTiff format and users can save the 
 intermediate processing results. This plugin allows users to process more than one file in the same process.
 
-![image](https://github.com/PANOimagen/batch_hillshader/blob/master/icons/icon.png?raw=true)
-
-If you uses as input LiDAR data, note that plugin uses LASTools library.
-        See LASTools License at: https://rapidlasso.com/lastools/
-
-At the process with LiDAR data, user can generates the FUSION LDV Catalog report with the ground points, to check the input 
-data quality (returns density, number of returns, return intensity, ...).
-
 The three light exposures combining method is based in Gantenbein (2012).
 
   Ref.: Gantenbein, C. (2012): "Creating Shaded Relief for Geologic Mapping using Multiple Light Sources". U.S. From 
@@ -28,9 +21,28 @@ The three light exposures combining method is based in Gantenbein (2012).
   
   (https://pubs.usgs.gov/of/2012/1171/pdf/usgs_of2012-1171-Gantenbein_p101-106.pdf) (Consult date-time: 2017/10/24 - 18:25 p.m.)
 
+![image](https://github.com/PANOimagen/batch_hillshader/blob/master/icons/icon.png?raw=true)
+
+For processing LiDAR data (allways in ASPRS format *.laz, and *.las) you must to install some external dependecies:
+
+You can use LasPy Library (BSD License) to generate a three exposure hillshade from *.las ASPRS format:
+
+  To install LasPy Library, you must launch the following line at OSGEO Shell:
+
+        > python -m pip install laspy
+    
+  LasPy documentation is avaible at: *https://github.com/laspy/laspy*
+
+  If you need to process compressed LiDAR data (*.laz format) and you want to use Free Open Source Software you can unzip laz format to las                     format using LasZip Library:
+  LasZip is LGPL License and you can found it at: *https://www.laszip.org/*
+
+If you uses as input LiDAR data, note that plugin uses LASTools library.
+        See LASTools License at: *https://rapidlasso.com/lastools/*
+
+At the process with LiDAR data, user can generates the FUSION LDV Catalog report with the ground points, to check the input 
+data quality (returns density, number of returns, return intensity, ...).
+
 KeyWords = Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshade Processing, Three Exposure Hillshade
-
-
 
 Batch Hillshader license:
 
