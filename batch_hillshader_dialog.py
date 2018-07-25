@@ -465,7 +465,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                   u' points ready'),MESSAGE_LEVEL)
 
             dtm_full_path = self.lidar2dtm.paths['dtm']
-            self.dtm_array = raster_funs.raster_2_array(
+            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
                         dtm_full_path)
 
             if partialsCreateAndLoad:
@@ -481,6 +481,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.HillDTM = hillshader_process.HillshaderDTM(
                                                      dtm_full_path,
                                                      self.dtm_array,
+                                                     self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
                                                      self.hill_params,
@@ -534,7 +535,8 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             dtm_full_path = self.laspyRasterize.array_2_raster(
                                                     self.interpolated_grid)
             
-            self.dtm_array = raster_funs.raster_2_array(dtm_full_path)
+            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
+                                                    dtm_full_path)
             
             if partialsCreateAndLoad:
                 dtm_filename, _ = os.path.splitext(
@@ -549,6 +551,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.HillDTM = hillshader_process.HillshaderDTM(
                                                      dtm_full_path,
                                                      self.dtm_array,
+                                                     self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
                                                      self.hill_params,
@@ -569,11 +572,13 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.showMessage('Starting processing DTM data {}'.format(
                                     base_name), MESSAGE_LEVEL)
 
-            self.dtm_array = raster_funs.raster_2_array(full_filename)
+            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
+                                                        full_filename)
 
             self.HillDTM = hillshader_process.HillshaderDTM(
                                                      full_filename,
                                                      self.dtm_array,
+                                                     self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
                                                      self.hill_params,

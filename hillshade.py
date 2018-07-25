@@ -37,10 +37,12 @@
  ***************************************************************************/
 """
 
+import scipy
+from scipy import ndimage
 import numpy as np
 from numpy import (gradient, pi, arctan, arctan2, sin, cos, sqrt)
 
-def hillshade(array, azimuth, angle_altitude):
+def hillshade(array, no_data_value, azimuth, angle_altitude):
     '''Hillshade the input numpy array and return a uint8 array.
 
     This function calculates the value of the hillshade array,

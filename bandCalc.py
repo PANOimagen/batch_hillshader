@@ -37,8 +37,11 @@
  ***************************************************************************/
 """
 import numpy as np
+import scipy
+from scipy import ndimage
 
-def merge_arrays(input_arrays, alpha_values, background_value=255):
+def merge_arrays(input_arrays, alpha_values,
+        dtm_array, no_data_value, background_value=255):
     '''Merge several input_arrays with given transparency values.
 
     Alpha values is a list of floats between 0 and 1 with the same size as
@@ -47,4 +50,7 @@ def merge_arrays(input_arrays, alpha_values, background_value=255):
     output = background_value * np.ones(input_arrays[0].shape, dtype = np.float)
     for array, alpha in zip(input_arrays, alpha_values):
         output = array * alpha + (1 - alpha) * output
-    return output.astype(array[0].dtype)
+    
+    eroded_hill = output * ndimage.binary_erosion(dtm_array - no_data_value)
+    
+    return eroded_hill.astype(array[0].dtype)

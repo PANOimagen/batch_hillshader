@@ -49,12 +49,13 @@ def raster_2_array(raster_full_path):
     data_set = gdal.Open(raster_full_path)
     data_set_band = data_set.GetRasterBand(1)
     raster_array = gnum.BandReadAsArray(data_set_band)
-
-    return raster_array
+    no_data_value = data_set_band.GetNoDataValue()
+    
+    return raster_array, no_data_value
 
 def array_2_raster(raster_array, input_template_path, output_path, 
                    data_type=gdalconst.GDT_Byte,
-                   no_data_value=-99999):
+                   no_data_value=0):
     """Create a raster file in geotiff format from a numpy array.
 
     Geotransform information for the output file is taken from the file at
@@ -103,4 +104,4 @@ def load_raster_layer(raster_full_path, raster_filename):
             from qgis.core import QgsMapLayerRegistry
             QgsMapLayerRegistry.instance().addMapLayer(rlayer)
         except ImportError:
-            QgsProject.instance().addMapLayer(rlayer)            
+            QgsProject.instance().addMapLayer(rlayer)      

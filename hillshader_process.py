@@ -125,7 +125,7 @@ class LiDAR2DTM(object):
 
 class HillshaderDTM(object):
 
-    def __init__(self, full_filename, dtm_array,
+    def __init__(self, full_filename, dtm_array, no_data_value,
                  partialsCreateAndLoad, sombrasOutResults, hill_params,
                  out_path):
         """Function to start class variables and launch the process
@@ -147,7 +147,7 @@ class HillshaderDTM(object):
         self.sombras_out = sombrasOutResults
 
         self.init_paths()
-        self.process(dtm_array)
+        self.process(dtm_array, no_data_value)
 
     def init_paths(self):
         """Function to init the output directory and the results full paths.
@@ -171,17 +171,17 @@ class HillshaderDTM(object):
             self.dirs['simple_hillshade'] = self.out_dirs['simple_hillshade']
             self.file_funs.create_dir(self.dirs['simple_hillshade'])
 
-    def process(self, dtm_array):
+    def process(self, dtm_array, no_data_value):
         """This function works with the partial hillshades and generates the
         composed hillshade
         """
-        hillshade_1_array = hill.hillshade(dtm_array,
+        hillshade_1_array = hill.hillshade(dtm_array, no_data_value,
                                            self.hill_params['azimuth1'],
                                            self.hill_params['angle_altitude1'])
-        hillshade_2_array = hill.hillshade(dtm_array,
+        hillshade_2_array = hill.hillshade(dtm_array, no_data_value,
                                            self.hill_params['azimuth2'],
                                            self.hill_params['angle_altitude2'])
-        hillshade_3_array = hill.hillshade(dtm_array,
+        hillshade_3_array = hill.hillshade(dtm_array, no_data_value,
                                            self.hill_params['azimuth3'],
                                            self.hill_params['angle_altitude3'])
 
@@ -213,7 +213,8 @@ class HillshaderDTM(object):
                 [hillshade_1_array, hillshade_2_array, hillshade_3_array],
                 [self.hill_params['transparency1'],
                  self.hill_params['transparency2'],
-                 self.hill_params['transparency3']])
+                 self.hill_params['transparency3']],
+                 dtm_array, no_data_value)
 
         fn_hillshade_filename = \
             self.file_templates['composed_hillshade'].format(
