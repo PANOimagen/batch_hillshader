@@ -278,7 +278,7 @@ class RasterizeLiDAR(object):
         return interpolate_grid.T
 
     def array_2_raster(self, raster_array, epsg_code=None,
-                   data_type=gdalconst.GDT_Float32, no_data_value=-99999):
+                   data_type=gdalconst.GDT_Float64, no_data_value=-99999):
         """ Create a raster file in geotiff format from a numpy array.
             Geotransform information for the output file is taken from the 
             input lidar file.
