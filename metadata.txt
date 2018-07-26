@@ -4,7 +4,7 @@ qgisMinimumVersion=2.8
 qgisMaximumVersion=3.99
 description= Plugin to generate a three light exposure hillshade (shaded relief by combining three light exposures)
 category=Raster
-version=2.2.66
+version=2.2.67
 author=PANOimagen S.L.
 email=info@panoimagen.com
 
