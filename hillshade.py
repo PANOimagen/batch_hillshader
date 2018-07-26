@@ -37,8 +37,6 @@
  ***************************************************************************/
 """
 
-import scipy
-from scipy import ndimage
 import numpy as np
 from numpy import (gradient, pi, arctan, arctan2, sin, cos, sqrt)
 

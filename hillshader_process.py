@@ -186,19 +186,24 @@ class HillshaderDTM(object):
                                            self.hill_params['angle_altitude3'])
 
         if self.partials_create_and_load:
-
+            eroded_1 = raster_funs.raster_erosion(
+                    hillshade_1_array, dtm_array, no_data_value)
             hillshade1, hillshade1_filename = self.save_raster(
-                    hillshade_1_array,
+                    eroded_1,
                     self.hill_params['azimuth1'],
                     self.hill_params['angle_altitude1'])
 
+            eroded_2 = raster_funs.raster_erosion(
+                    hillshade_2_array, dtm_array, no_data_value)
             hillshade2, hillshade2_filename = self.save_raster(
-                    hillshade_2_array,
+                    eroded_2,
                     self.hill_params['azimuth2'],
                     self.hill_params['angle_altitude2'])
-
+            
+            eroded_3 = raster_funs.raster_erosion(
+                    hillshade_3_array, dtm_array, no_data_value)
             hillshade3, hillshade3_filename = self.save_raster(
-                    hillshade_3_array,
+                    eroded_3,
                     self.hill_params['azimuth3'],
                     self.hill_params['angle_altitude3'])
 

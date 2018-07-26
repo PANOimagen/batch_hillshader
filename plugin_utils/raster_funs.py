@@ -38,6 +38,8 @@
 """
 
 from __future__ import unicode_literals
+import scipy
+from scipy import ndimage
 from osgeo import gdal, osr
 import osgeo.gdalnumeric as gnum
 from osgeo import gdalconst
@@ -52,6 +54,15 @@ def raster_2_array(raster_full_path):
     no_data_value = data_set_band.GetNoDataValue()
     
     return raster_array, no_data_value
+
+def raster_erosion(raster_array, dtm_array, no_data_value):
+    """ Function to eroded a raster array
+    """
+    
+    eroded_array = raster_array * ndimage.binary_erosion(
+            dtm_array - no_data_value)
+    
+    return eroded_array
 
 def array_2_raster(raster_array, input_template_path, output_path, 
                    data_type=gdalconst.GDT_Byte,
