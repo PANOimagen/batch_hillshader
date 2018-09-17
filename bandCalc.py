@@ -49,9 +49,7 @@ def merge_arrays(input_arrays, alpha_values,
     output = background_value * np.ones(input_arrays[0].shape, dtype = np.float)
     for array, alpha in zip(input_arrays, alpha_values):
         output = array * alpha + (1 - alpha) * output
-    try:
-        return output * ndimage.binary_erosion(
-                dtm_array - no_data_value)
-    except TypeError:
-        # no_data_value is None, issue #3
-        return output
+        
+    eroded_hill = raster_funs.raster_erosion(output, dtm_array, no_data_value)
+
+    return eroded_hill.astype(array[0].dtype)
