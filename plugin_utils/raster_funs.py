@@ -58,11 +58,14 @@ def raster_2_array(raster_full_path):
 def raster_erosion(raster_array, dtm_array, no_data_value):
     """ Function to eroded a raster array
     """
+    try:
+        eroded_array = raster_array * ndimage.binary_erosion(
+                dtm_array - no_data_value)
+        return eroded_array
     
-    eroded_array = raster_array * ndimage.binary_erosion(
-            dtm_array - no_data_value)
-    
-    return eroded_array
+    except TypeError:
+        # no_data_value is None, issue #3
+        return raster_array
 
 def array_2_raster(raster_array, input_template_path, output_path, 
                    data_type=gdalconst.GDT_Byte,
