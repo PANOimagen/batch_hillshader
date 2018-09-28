@@ -756,6 +756,20 @@
             </item>
            </layout>
           </item>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Select the result, terrain or surfaces</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="surfaceTerrainComboBox"/>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
