@@ -49,10 +49,19 @@ from laspy.header import Header
 
 class LiDAR(object):
 
-    def __init__(self, in_las_path, out_path, partials_create):
+    def __init__(self, in_las_path, out_path, partials_create, 
+                 terrain=False, surfaces=False):
         
         """ Init variables
         """
+        self.terrain = terrain
+        self.surfaces = surfaces
+        if self.terrain:
+            self.class_flag = 2
+        elif self.surfaces:
+            # TODO
+            pass
+
         self.in_las_path = in_las_path
         self.path, full_name = os.path.split(in_las_path)
         self.files_utils = files_and_dirs_funs.DirAndPaths()
@@ -68,16 +77,12 @@ class LiDAR(object):
 
     def process(self):
         
-        if self.partials_create:
             templates_dict = self.files_utils.file_templates(self.name)
-            self.out_name = templates_dict['las_ground'].format(self.name)
-            out_dir = os.path.join(self.out_path, 'intermediate_results', 
-                                   'las_ground')
-            self.files_utils.create_dir(out_dir)
-                            
-            self.out_full_path = os.path.join(out_dir, 
-                                      templates_dict['las_ground'].format(
-                                              self.name))
+        if self.partials_create and not self.surfaces:
+            self.out_dir = os.path.join(self.out_path, 'intermediate_results', 
+                                   'las')
+            self.files_utils.create_dir(self.out_dir)
+
             self.write_las_file()
         
         return [self.lidar_arrays_list, 
@@ -174,31 +179,94 @@ class LiDAR(object):
         """ Creates arrays for a given class (default=2) with the coordinates
             of the points classificated by that class flag
         """
-        class_flag = 2
-        class_2_points, class_2_bool = self.get_points_by_class(class_flag)
-        size = class_2_points.shape[0]
-        x_array = self.x_dimension[class_2_bool].reshape(size, 1)
-        y_array = self.y_dimension[class_2_bool].reshape(size, 1)
-        z_array = self.z_dimension[class_2_bool]
-        
+#        class_flags = 2, 3, 4, 5 para suelo, vegetación baja, media y alta respectivamente
+        if self.terrain:
+            class_2_points, class_2_bool = self.get_points_by_class(
+                    self.class_flag)
+            size = class_2_points.shape[0]
+            x_array = self.x_dimension[class_2_bool].reshape(size, 1)
+            y_array = self.y_dimension[class_2_bool].reshape(size, 1)
+            z_array = self.z_dimension[class_2_bool]
+            
+        elif self.surfaces:
+            # Guardo el archivo para poder leerlo
+            
+            self.out_dir = os.path.join(self.out_path, 'intermediate_results', 
+                                   'las')
+            
+            filename = ('Surfaces_' + 
+                                self.templates_dict['las'].format(self.name))
+
+            full_path = os.path.join(self.out_dir, filename)
+            
+            self.files_utils.create_dir(self.out_dir)
+            
+            out_file = File(full_path, mode='w', header=self.in_file.header)
+            out_file.points = self.in_file.points[
+                    self.in_file.return_num == 1]
+            out_file.close()
+            
+            #leo el archivo
+            in_file = File(full_path, mode='r')
+            scale = in_file.header.scale
+            offset = in_file.header.offset
+                            
+            x = in_file.X
+            y = in_file.Y
+            z = in_file.Z
+            
+            x_dimension = x * scale[0] + offset[0]
+            y_dimension = y * scale[1] + offset[1]
+            z_dimension = z * scale[-1] + offset[-1]
+            
+            size = x_dimension.shape[0]
+            
+            x_array = x_dimension.reshape(size, 1)
+            y_array = y_dimension.reshape(size, 1)
+            z_array = z_dimension
+            
+            # Cerrar archivo para poder eliminarlo
+            in_file.close()
+            
+            if not self.partials_create:     
+                self.files_utils.remove_temp_file(full_path)
+                try:
+                    self.files_utils.remove_temp_dir(self.out_dir)
+                except OSError:
+                    pass
+                
         xy_array = np.concatenate((x_array, y_array), axis=1)
         self.lidar_arrays_list = [xy_array, z_array]
     
     def write_las_file(self):
         """ Create and write a new lidar file with the desirable points
         """ 
+        if self.surfaces:
+            self.out_full_path = os.path.join(self.out_dir, ('Surfaces_' + 
+                                self.templates_dict['las'].format(self.name)))
         
-        class_flag = 2
-        class_2_points, class_2_bool = self.get_points_by_class(class_flag)
+        elif self.terrain:
+            self.out_full_path = os.path.join(self.out_dir, ('Terrain_' + 
+                                self.templates_dict['las'].format(self.name)))
+        
         out_file = File(self.out_full_path, mode='w', 
-                        header=self.in_file.header)
-        out_file.points = self.in_file.points[class_2_bool]
+                            header=self.in_file.header)
+        if self.terrain:
+            class_2_points, class_2_bool = self.get_points_by_class(
+                    self.class_flag)
+            out_file.points = self.in_file.points[class_2_bool]
+            
+        elif self.surfaces:
+            out_file.points = self.in_file.points[
+                    self.in_file.return_num == 1]
+        
         out_file.close()
 
 class RasterizeLiDAR(object):
 
-    def __init__(self, input_file_path, laspy_result, out_path, method='nearest', 
-                 pixel_size=None):
+    def __init__(self, input_file_path, laspy_result, out_path, 
+                 terrain=False, surfaces=False,
+                 method='nearest', pixel_size=None):
 
         self.lidar_arrays_list = laspy_result[0]
         self.lidar_extent = laspy_result[1]

@@ -203,8 +203,13 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                              Fusion_path)
         
     def initLaspyUi(self):
-        methods = ['nearest', 'linear', 'cubic']
-        self.interpolatingMethodComboBox.addItems(methods)
+# TODO: user can select both (terrain and surfaces)        
+#        results_options = ['Terrain', 'Surfaces',
+#                           'Both (Surfaces and Terrain)']
+        results_options = ['Terrain', 'Surfaces']
+        interpolate_methods = ['nearest', 'linear', 'cubic']
+        self.interpolatingMethodComboBox.addItems(interpolate_methods)
+        self.surfaceTerrainComboBox.addItems(results_options)
         laspy_text = 'LasPy Library is {}'
         if not HAS_LASPY:
             surname_label = (u'not installed. Read plugin documentation to' +
@@ -406,6 +411,8 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.showQMessage("Error: Not output folder selected!\n" +
                               "Please, select one.")
         
+        self.process_option = self.surfaceTerrainComboBox.currentText()
+        
         if filenames and self.processMode:
             for f in filenames.split(","):
                 full_filename = f.strip()
@@ -513,9 +520,23 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             
             self.inter_method = self.interpolatingMethodComboBox.currentText()
             
+            # TODO
+            if self.process_option == 'Surfaces':
+                terrain = False
+                surfaces = True
+            elif self.process_option == 'Terrain':
+                terrain = True
+                surfaces = False
+
+#TODO: User can select both results
+#            elif self.process_option == 'Both (Surfaces and Terrain)':
+#                terrain = True
+#                surfaces = True
+
             self.laspyLidar = laspy_utils.LiDAR(full_filename,
                                                 out_path,
-                                                partialsCreateAndLoad)
+                                                partialsCreateAndLoad,
+                                                terrain, surfaces)
 
             self.lidar_arrays_list, self.las_file_extent, self.density =\
                         self.laspyLidar.process()
@@ -528,6 +549,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                                     full_filename,
                                                     self.lidar_results,
                                                     out_path,
+                                                    terrain, surfaces,
                                                     self.inter_method, 
                                                     sizeDEM)
               
