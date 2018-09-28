@@ -67,6 +67,7 @@ class LiDAR(object):
         self.files_utils = files_and_dirs_funs.DirAndPaths()
         self.name, self.extension = self.files_utils.init(full_name)
         self.partials_create = partials_create
+        self.templates_dict = self.files_utils.file_templates(self.name)
         self.out_path = out_path
         self.read_las_file()
         self.get_all_points()
@@ -77,7 +78,6 @@ class LiDAR(object):
 
     def process(self):
         
-            templates_dict = self.files_utils.file_templates(self.name)
         if self.partials_create and not self.surfaces:
             self.out_dir = os.path.join(self.out_path, 'intermediate_results', 
                                    'las')
