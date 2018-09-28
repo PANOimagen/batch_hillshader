@@ -4,7 +4,7 @@ qgisMinimumVersion=2.8
 qgisMaximumVersion=3.99
 description= Plugin to generate a three light exposure hillshade (shaded relief by combining three light exposures)
 category=Raster
-version=2.2.69
+version=2.3.0
 author=PANOimagen S.L.
 email=info@panoimagen.com
 
@@ -12,7 +12,8 @@ about=This plugin generates a three light exposure hillshade (shaded relief by c
     as input LiDAR classified data (ASPRS classification / *.laz, *.las formats) or a Digital Terrain Model (DTM) in
     raster format (GEOTiff / ASCII). The three light exposures combining method is based in Gantenbein (2012): <(http://pubs.usgs.gov/of/2012/1171/)>
 
-    You can use LasPy Library to process LiDAR data (ASPRS las format)
+    You can use LasPy Library to process LiDAR data (ASPRS las format). Now user can generates a Terrain Hillshade and Surfaces Hillshades (from version 2.3.0.)
+    The Surface Model (DSM) is generated using LiDAR first returns only.
     
     If you uses as input LiDAR data, note that plugin uses LASTools library and FUSION LDV.
 
@@ -24,9 +25,10 @@ about=This plugin generates a three light exposure hillshade (shaded relief by c
 
 # Uncomment the following line and add your changelog:
 # changelog=
+        2.3.0 : Added option to generate a terrain hillshade and a surface hillshade at LasPy mode
 
 # Tags are comma separated with spaces allowed
-tags=Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshade Processing, Three Exposure Hillshade
+tags=Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshade Processing, Three Exposure Hillshade, Digital Surface Model, DSM, Digital Elevation Model, MDE
 
 homepage= https://github.com/PANOimagen/batch_hillshader
 tracker=https://github.com/PANOimagen/batch_hillshader/issues
