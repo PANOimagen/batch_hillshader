@@ -540,6 +540,14 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
 
             self.lidar_arrays_list, self.las_file_extent, self.density =\
                         self.laspyLidar.process()
+            
+            # Si la nube de puntos no está clasificada al buscar puntos de suelo (class 2)
+            # se devuelve un array vacío.
+            if self.lidar_arrays_list[0].shape == (0, 2):
+                self.showQMessage("Error: An error has occurred. The selected" +
+                                  u" file is not valid for the process, it is" +
+                                  u" possibly not classified.\nPlease, solve" +
+                                  u" it and restart the process!")
 
             self.lidar_results = [self.lidar_arrays_list, 
                                   self.las_file_extent, 
@@ -553,7 +561,12 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                                     self.inter_method, 
                                                     sizeDEM)
               
-            self.interpolated_grid = self.laspyRasterize.interpolate_grid()
+            try:
+                self.interpolated_grid = self.laspyRasterize.interpolate_grid()
+            except ValueError:
+                self.showMessage('Batch Hillshader stoped process',
+                                  Qgis.MessageLevel(1))
+                return
               
             dem_full_path = self.laspyRasterize.array_2_raster(
                                                     self.interpolated_grid)
