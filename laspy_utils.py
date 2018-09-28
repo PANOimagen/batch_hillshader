@@ -291,8 +291,8 @@ class RasterizeLiDAR(object):
             data_driver = gdal.GetDriverByName(b"GTiff") # for QGIS2
         data_set_geotransform = self.set_raster_geotransform()
     
-        rows = raster_array.shape[-1]
-        cols = raster_array.shape[0]
+        rows = raster_array.shape[0]
+        cols = raster_array.shape[-1]
         
         target_ds = data_driver.Create(
                 self.dem_full_path, cols, rows, 1, data_type)
