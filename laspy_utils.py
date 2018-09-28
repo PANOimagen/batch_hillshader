@@ -84,7 +84,13 @@ class LiDAR(object):
             self.files_utils.create_dir(self.out_dir)
 
             self.write_las_file()
-
+        
+        if self.lidar_arrays_list[0].shape == (0, 2):
+            raise ValueError(u"Error: An error has occurred. The selected" +
+                                  u" file is not valid for the process, it is" +
+                                  u" possibly not classified.\nPlease, solve" +
+                                  u" it and restart the process!")
+        
         return [self.lidar_arrays_list, 
                 self.las_file_extent, 
                 self.density['ground_dens_class']]
