@@ -84,7 +84,7 @@ class LiDAR(object):
             self.files_utils.create_dir(self.out_dir)
 
             self.write_las_file()
-        
+
         return [self.lidar_arrays_list, 
                 self.las_file_extent, 
                 self.density['ground_dens_class']]
