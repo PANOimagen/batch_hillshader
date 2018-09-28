@@ -51,7 +51,6 @@ try:
     MESSAGE_LEVEL = Qgis.MessageLevel(0)
 except ImportError, AttributeError:
     MESSAGE_LEVEL = QgsMessageBar.INFO
-    
 
 try:
     from . import laspy_utils
@@ -406,7 +405,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         if not outPath:
             self.showQMessage("Error: Not output folder selected!\n" +
                               "Please, select one.")
-
+        
         if filenames and self.processMode:
             for f in filenames.split(","):
                 full_filename = f.strip()
@@ -443,7 +442,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             next_index = max_index + 1
             out_path = os.path.join(outPath,
                         (base_name + '_r' + str(next_index)))
-            
+        
         self.dir_funs = dir_fns.DirAndPaths()
         
         if self.LidarProcessCheckBox.isChecked():
@@ -511,11 +510,13 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.showMessage('Starting processing LiDAR data {}'.format(
                                     base_name) +
                              u' with LasPy Library', MESSAGE_LEVEL)
+            
             self.inter_method = self.interpolatingMethodComboBox.currentText()
+            
             self.laspyLidar = laspy_utils.LiDAR(full_filename,
                                                 out_path,
                                                 partialsCreateAndLoad)
-            
+
             self.lidar_arrays_list, self.las_file_extent, self.density =\
                         self.laspyLidar.process()
 

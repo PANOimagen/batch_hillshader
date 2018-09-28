@@ -41,7 +41,7 @@ import tempfile
 import os
 
 class DirAndPaths(object):
-    
+        
     def init(self, file_name):
         """Get the base name and the extnesion os a given filename
         """

@@ -132,12 +132,12 @@ class HillshaderDEM(object):
         """
 
         self.path, self.file_name = os.path.split(full_filename)
-
+        
         self.file_funs = files_and_dirs_funs.DirAndPaths()
         self.out_path = out_path
         self.input_base_name, _, = \
                 self.file_funs.init(self.file_name)
-
+        
         if not os.path.exists(self.out_path):
             os.makedirs(self.out_path)
 
@@ -227,7 +227,6 @@ class HillshaderDEM(object):
         raster_funs.array_2_raster(three_exp_array,
                                    self.dem_full_path,
                                    self.paths['composed_hillshade'])
-
         if self.sombras_out:
             raster_funs.load_raster_layer(
                     self.paths['composed_hillshade'], fn_hillshade_filename)

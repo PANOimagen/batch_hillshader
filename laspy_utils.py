@@ -65,8 +65,7 @@ class LiDAR(object):
         self.get_file_extent()
         self.get_file_density()
         self.get_points_arrays()
-    
-    
+
     def process(self):
         
         if self.partials_create:
