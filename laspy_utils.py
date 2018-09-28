@@ -214,11 +214,11 @@ class RasterizeLiDAR(object):
         self.pixel_size = pixel_size
         
         templates_dict = self.files_utils.file_templates(name)
-        out_name = templates_dict['dtm'].format(name)
+        out_name = templates_dict['dem'].format(name)
         self.dirs = self.files_utils.set_output_dir(out_path)[0]
         
-        self.files_utils.create_dir(self.dirs['dtm'])
         self.dtm_full_path = os.path.join(self.dirs['dtm'], out_name)
+        self.files_utils.create_dir(self.dirs['dem'])
 
 #        lidar_extent = [(max(self.x_dimension), max(self.y_dimension)), 
 #                        (max(self.x_dimension), min(self.y_dimension)), 
@@ -296,7 +296,7 @@ class RasterizeLiDAR(object):
         cols = raster_array.shape[0]
         
         target_ds = data_driver.Create(
-                self.dtm_full_path, cols, rows, 1, data_type)
+                self.dem_full_path, cols, rows, 1, data_type)
         target_ds.SetGeoTransform(data_set_geotransform)
         
         if epsg_code:
@@ -310,7 +310,7 @@ class RasterizeLiDAR(object):
         data_set_out_band.FlushCache()
         target_ds = None
         
-        return self.dtm_full_path
+        return self.dem_full_path
 
     def set_raster_geotransform(self):
         """ Set the extent for the output raster

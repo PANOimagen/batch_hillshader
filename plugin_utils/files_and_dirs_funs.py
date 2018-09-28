@@ -53,9 +53,8 @@ class DirAndPaths(object):
         """Init and create the file templates
         """
         self.templates = {'las': '{}_las.las',
-                          'las_ground': '{}_ground_las.las',
                           'catalog': '{}_ground_catalog.csv',
-                          'dtm': '{}_dtm.tif',
+                          'dem': '{}_dem.tif',
                           'simple_hillshade': '{}_{}_{}_SimpleHillshade.tif',
                           'composed_hillshade': '{}_ComposedHillshade.tif'}
         
@@ -73,9 +72,9 @@ class DirAndPaths(object):
                 self.temp_dirs['temp_dir'], 
                 self.templates['las'].format(self.base_name))
         
-        self.temp_full_paths['dtm'] = os.path.join(
+        self.temp_full_paths['dem'] = os.path.join(
                 self.temp_dirs['temp_dir'], 
-                self.templates['dtm'].format(self.base_name))
+                self.templates['dem'].format(self.base_name))
         
         return self.temp_dirs, self.temp_full_paths
     
@@ -110,7 +109,7 @@ class DirAndPaths(object):
         self.out_dirs['catalog'] = os.path.join(out_path, 'catalog-report')
         self.out_dirs['las_ground'] = os.path.join(self.out_dirs['catalog'],
                      'ground_points')
-        self.out_dirs['dtm'] = os.path.join(intermediate_folder, 'dtm')
+        self.out_dirs['dem'] = os.path.join(intermediate_folder, 'dem')
         self.out_dirs['simple_hillshade'] = os.path.join(
                         intermediate_folder, 'simple_hillshades')
         self.out_dirs['composed_hillshade'] = out_path
@@ -121,14 +120,14 @@ class DirAndPaths(object):
             
         self.out_full_paths['las_ground'] = os.path.join(
                 self.out_dirs['las_ground'], 
-                         self.templates['las_ground'].format(self.base_name)) 
+                         self.templates['las'].format(self.base_name)) 
         
         self.out_full_paths['catalog'] = \
             os.path.join(self.out_dirs['catalog'], 
                          self.templates['catalog'].format(self.base_name))   
             
-        self.out_full_paths['dtm'] = os.path.join(self.out_dirs['dtm'], 
-                           self.templates['dtm'].format(self.base_name))
+        self.out_full_paths['dem'] = os.path.join(self.out_dirs['dem'], 
+                           self.templates['dem'].format(self.base_name))
         
         self.out_full_paths['simple_hillshade'] = os.path.join(
                 self.out_dirs['simple_hillshade'], 

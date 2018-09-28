@@ -95,28 +95,28 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.laspyCheckBox.setChecked(False)
         self.loadHillShadeCheckBox.setChecked(True)
         self.loadPartialsCheckBox.setChecked(False)
-        self.sizeDTMBox.setEnabled(False)
-        self.sizeDTMLabel.setEnabled(False)
+        self.sizeDEMBox.setEnabled(False)
+        self.sizeDEMLabel.setEnabled(False)
         self.laspyGroupBox.setEnabled(False)
         self.copyrightLabel.setText('(C) 2017 by Panoimagen S.L.')
 #        self.laspyRecomendedPixelLabel.setText(
 #                'Recomended pixel size: - meters')
-        self.currentDTMPixelSizeLabel.setText(
-                'Input DTM pixel size: - x - meters')
+        self.currentDEMPixelSizeLabel.setText(
+                'Input DEM pixel size: - x - meters')
         self.currentPxSizeLabel.setText(
                 'Selected pixel size for hillshade results: - x - meters')
         self.inputLidarToolButton.clicked.connect(self.lidarProcess)
         self.laspyToolButton.clicked.connect(self.laspyProcess)
         self.outputFolderToolButton.clicked.connect(self.setOutPath)
-        self.inputDTMToolButton.clicked.connect(self.DTMProcess)
+        self.inputDEMToolButton.clicked.connect(self.DEMProcess)
         self.LidarProcessCheckBox.clicked.connect(self.updateUi)
         self.LidarProcessCheckBox.clicked.connect(
                 self.hillshadePixelSize)
         self.laspyCheckBox.clicked.connect(self.updateUi)
         self.laspyCheckBox.clicked.connect(self.hillshadePixelSize)
         self.runCatalogCheckBox.clicked.connect(self.updateUi)
-        self.inputDTMLineEdit.textChanged.connect(self.updateDTMPixelSize)
-        self.sizeDTMBox.valueChanged.connect(self.hillshadePixelSize)
+        self.inputDEMLineEdit.textChanged.connect(self.updateDEMPixelSize)
+        self.sizeDEMBox.valueChanged.connect(self.hillshadePixelSize)
         self.laspyPixelSizeDoubleSpinBox.valueChanged.connect(
                 self.hillshadePixelSize)
         self._initVersion()
@@ -229,12 +229,12 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.laspy_checked = self.laspyCheckBox.isChecked()
 
         if self.lidar_checked or self.laspy_checked:
-            disable_DTM = True
-            self.inputDTMLineEdit.clear()
-            self.currentDTMPixelSizeLabel.setText(
-                'Input DTM pixel size: - x - meters')
+            disable_DEM = True
+            self.inputDEMLineEdit.clear()
+            self.currentDEMPixelSizeLabel.setText(
+                'Input DEM pixel size: - x - meters')
         else:
-            disable_DTM = False  
+            disable_DEM = False  
             self.inputLidarLineEdit.clear()
             self.runCatalogCheckBox.setChecked(False)
             self.laspyLineEdit.clear()
@@ -244,37 +244,37 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.inputLidarLineEdit.setEnabled(self.lidar_checked)
         self.inputLidarToolButton.setEnabled(self.lidar_checked)
         self.LidarFilesGroupBox.setEnabled(self.lidar_checked)
-        self.sizeDTMBox.setEnabled(disable_DTM)
-        self.sizeDTMLabel.setEnabled(disable_DTM)
+        self.sizeDEMBox.setEnabled(disable_DEM)
+        self.sizeDEMLabel.setEnabled(disable_DEM)
         self.runCatalogCheckBox.setEnabled(self.lidar_checked)
-        self.inputDTMLineEdit.setEnabled(not disable_DTM)
-        self.inputDTMToolButton.setEnabled(not disable_DTM)
-        self.currentDTMPixelSizeLabel.setEnabled(not disable_DTM)
-        self.inputDTMLabel.setEnabled(not disable_DTM)
+        self.inputDEMLineEdit.setEnabled(not disable_DEM)
+        self.inputDEMToolButton.setEnabled(not disable_DEM)
+        self.currentDEMPixelSizeLabel.setEnabled(not disable_DEM)
+        self.inputDEMLabel.setEnabled(not disable_DEM)
         self.catalogGroupBox.setEnabled(self.catalog_checked)
         self.laspyGroupBox.setEnabled(self.laspy_checked)
 
-    def updateDTMPixelSize(self):
-        """Set input DTM pixel size when the process starts with an input
-            DTM
+    def updateDEMPixelSize(self):
+        """Set input DEM pixel size when the process starts with an input
+            DEM
         """
-        dtm_path = self.inputDTMLineEdit.text()
-        if dtm_path:
-            dtm_ds = gdal.Open(dtm_path)
+        dem_path = self.inputDEMLineEdit.text()
+        if dem_path:
+            dem_ds = gdal.Open(dem_path)
             try:
-                self.dtm_geo_info = dtm_ds.GetGeoTransform()
-                pixel_with = self.dtm_geo_info[1]
-                pixel_height = self.dtm_geo_info[5]
-                pixel_size_label = ('Input DTM pixel size' +
+                self.dem_geo_info = dem_ds.GetGeoTransform()
+                pixel_with = self.dem_geo_info[1]
+                pixel_height = self.dem_geo_info[5]
+                pixel_size_label = ('Input DEM pixel size' +
                                     ': {} x {} meters'.format(
                         pixel_with, pixel_height))
-                self.currentDTMPixelSizeLabel.setText(pixel_size_label)
+                self.currentDEMPixelSizeLabel.setText(pixel_size_label)
                 self.hillshadePixelSize()
             except AttributeError:
-                self.currentDTMPixelSizeLabel.setText(
-                        'Input DTM pixel size: - x - meters')
+                self.currentDEMPixelSizeLabel.setText(
+                        'Input DEM pixel size: - x - meters')
         else:
-            self.dtm_geo_info = None
+            self.dem_geo_info = None
 
     def hillshadePixelSize(self):
         """Set the hillshade results pixel size and update the label
@@ -282,28 +282,28 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
 
         try:
             if self.LidarProcessCheckBox.isChecked():
-                dtm_pixel_size = [self.sizeDTMBox.value(),
-                                  -(self.sizeDTMBox.value())]
-                self.updateHillshadeSizeLabel(dtm_pixel_size[0],
-                                                   dtm_pixel_size[-1])
+                dem_pixel_size = [self.sizeDEMBox.value(),
+                                  -(self.sizeDEMBox.value())]
+                self.updateHillshadeSizeLabel(dem_pixel_size[0],
+                                                   dem_pixel_size[-1])
                 return
             
             elif self.laspyCheckBox.isChecked():
-                dtm_pixel_size = [self.laspyPixelSizeDoubleSpinBox.value(),
+                dem_pixel_size = [self.laspyPixelSizeDoubleSpinBox.value(),
                                   -(self.laspyPixelSizeDoubleSpinBox.value())]    
-                self.updateHillshadeSizeLabel(dtm_pixel_size[0], 
-                                              dtm_pixel_size[-1])
+                self.updateHillshadeSizeLabel(dem_pixel_size[0], 
+                                              dem_pixel_size[-1])
                 return
             
         except AttributeError:
             pass
 
         try:
-            if self.dtm_geo_info is None:
+            if self.dem_geo_info is None:
                 self.updateHillshadeSizeLabel('-','-')
             else:
-                self.hillshadePxSize = [self.dtm_geo_info[1],
-                                        self.dtm_geo_info[5]]
+                self.hillshadePxSize = [self.dem_geo_info[1],
+                                        self.dem_geo_info[5]]
                 self.updateHillshadeSizeLabel(self.hillshadePxSize[0],
                                                self.hillshadePxSize[-1])
         except AttributeError:
@@ -352,19 +352,19 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                     'batch_hillshader_output')
                 self.outputFolderLineEdit.setText(outPath)
                 
-    def DTMProcess(self):
-        """Processing with DTM data. Set input file and start output folder
+    def DEMProcess(self):
+        """Processing with DEM data. Set input file and start output folder
         """
         fileNames = getOpenFileNames(self,
-                "Select the DTM input file/s",
-                self.inputDTMToolButton.text(),
+                "Select the DEM input file/s",
+                self.inputDEMToolButton.text(),
                 ("Raster files (*.tif *.tiff *.TIF *.TIFF *.asc *.ASC);;" +
                  "GEOTiff (*.tif *.tiff *.TIF *.TIFF);;" +
                  " ASCII Grid (*.asc *.ASC);; All files (*)"))
 
         if fileNames:
             # quoted = ['"{}"'.format(fn) for fn in fileNames]
-            self.inputDTMLineEdit.setText(", ".join(fileNames[0]))
+            self.inputDEMLineEdit.setText(", ".join(fileNames[0]))
             if not self.outputFolderLineEdit.text():
                 outPath = os.path.join(
                     os.path.split(os.path.abspath(fileNames[0][0]))[0],
@@ -395,8 +395,8 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             self.processMode = 'laspyInput'
         
         else:
-            filenames = self.inputDTMLineEdit.text()
-            self.processMode = 'DTMInput'
+            filenames = self.inputDEMLineEdit.text()
+            self.processMode = 'DEMInput'
 
         if not filenames:
             self.showQMessage("Error: Not input file selected!\nPlease," +
@@ -422,9 +422,9 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         partialsCreateAndLoad = self.loadPartialsCheckBox.isChecked()
         sombrasOutResults = self.loadHillShadeCheckBox.isChecked()
         if self.LidarProcessCheckBox.isChecked():
-            sizeDTM = self.sizeDTMBox.value()
+            sizeDEM = self.sizeDEMBox.value()
         elif self.laspyCheckBox.isChecked():
-            sizeDTM = self.laspyPixelSizeDoubleSpinBox.value()
+            sizeDEM = self.laspyPixelSizeDoubleSpinBox.value()
             
         _, filename = os.path.split(full_filename)
         base_name, ext = os.path.splitext(filename)
@@ -453,34 +453,34 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                              u' with FUSION LDV and LASTools Library', 
                              MESSAGE_LEVEL)
 
-            self.lidar2dtm = hillshader_process.LiDAR2DTM(
+            self.lidar2dem = hillshader_process.LiDAR2DEM(
                                                      full_filename,
                                                      out_path,
                                                      partialsCreateAndLoad,
-                                                     sizeDTM,
+                                                     sizeDEM,
                                                      self.catalog_params)
 
             if self.catalog_params:
                 self.showMessage((u'Catalog report for ground LiDAR' +
                                   u' points ready'),MESSAGE_LEVEL)
 
-            dtm_full_path = self.lidar2dtm.paths['dtm']
-            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
-                        dtm_full_path)
+            dem_full_path = self.lidar2dem.paths['dem']
+            self.dem_array, self.no_data_value = raster_funs.raster_2_array(
+                        dem_full_path)
 
             if partialsCreateAndLoad:
-                dtm_filename, _ = os.path.splitext(
-                        os.path.split(dtm_full_path)[-1])
+                dem_filename, _ = os.path.splitext(
+                        os.path.split(dem_full_path)[-1])
                 raster_funs.load_raster_layer(
-                            dtm_full_path,
-                            dtm_filename)
+                            dem_full_path,
+                            dem_filename)
 
             self.showMessage('Processing data... {}'.format(base_name),
                                   MESSAGE_LEVEL)
 
-            self.HillDTM = hillshader_process.HillshaderDTM(
-                                                     dtm_full_path,
-                                                     self.dtm_array,
+            self.HillDEM = hillshader_process.HillshaderDEM(
+                                                     dem_full_path,
+                                                     self.dem_array,
                                                      self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
@@ -489,21 +489,21 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
 
             if partialsCreateAndLoad:
                 temp_files_list = os.listdir(
-                        self.lidar2dtm.temp_dirs['temp_dir'])
+                        self.lidar2dem.temp_dirs['temp_dir'])
                 if len(temp_files_list) != 0:
                     for temp_file in temp_files_list:
                         file_path = os.path.join(
-                                self.lidar2dtm.temp_dirs['temp_dir'],
+                                self.lidar2dem.temp_dirs['temp_dir'],
                                 temp_file)
                         self.dir_funs.remove_temp_file(file_path)
                 temp_files_list = os.listdir(
-                        self.lidar2dtm.temp_dirs['temp_dir'])
+                        self.lidar2dem.temp_dirs['temp_dir'])
                 if len(temp_files_list) == 0:
                     self.dir_funs.remove_temp_dir(
-                            self.lidar2dtm.temp_dirs['temp_dir'])
+                            self.lidar2dem.temp_dirs['temp_dir'])
 
             self.showMessage('Process finisehd: {} file created'.format(
-                    self.HillDTM.file_templates['composed_hillshade'].format(
+                    self.HillDEM.file_templates['composed_hillshade'].format(
                             base_name)), MESSAGE_LEVEL)
         
         elif self.laspyCheckBox.isChecked():
@@ -528,29 +528,29 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                                     self.lidar_results,
                                                     out_path,
                                                     self.inter_method, 
-                                                    sizeDTM)
+                                                    sizeDEM)
               
             self.interpolated_grid = self.laspyRasterize.interpolate_grid()
               
-            dtm_full_path = self.laspyRasterize.array_2_raster(
+            dem_full_path = self.laspyRasterize.array_2_raster(
                                                     self.interpolated_grid)
             
-            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
-                                                    dtm_full_path)
+            self.dem_array, self.no_data_value = raster_funs.raster_2_array(
+                                                    dem_full_path)
             
             if partialsCreateAndLoad:
-                dtm_filename, _ = os.path.splitext(
-                            os.path.split(dtm_full_path)[-1])
+                dem_filename, _ = os.path.splitext(
+                            os.path.split(dem_full_path)[-1])
                 raster_funs.load_raster_layer(
-                            dtm_full_path,
-                            dtm_filename)
+                            dem_full_path,
+                            dem_filename)
 
             self.showMessage('Processing data... {}'.format(base_name),
                                   MESSAGE_LEVEL)
 
-            self.HillDTM = hillshader_process.HillshaderDTM(
-                                                     dtm_full_path,
-                                                     self.dtm_array,
+            self.HillDEM = hillshader_process.HillshaderDEM(
+                                                     dem_full_path,
+                                                     self.dem_array,
                                                      self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
@@ -558,26 +558,26 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                                      out_path)
            
             if not partialsCreateAndLoad:
-                self.dir_funs.remove_temp_file(dtm_full_path)
+                self.dir_funs.remove_temp_file(dem_full_path)
                 intermediate_folder = os.path.split(
-                        self.laspyRasterize.dirs['dtm'])[0]
-                self.dir_funs.remove_temp_dir(self.laspyRasterize.dirs['dtm'])
+                        self.laspyRasterize.dirs['dem'])[0]
+                self.dir_funs.remove_temp_dir(self.laspyRasterize.dirs['dem'])
                 self.dir_funs.remove_temp_dir(intermediate_folder)
                 
             self.showMessage('Process finisehd: {} file created'.format(
-                    self.HillDTM.file_templates['composed_hillshade'].format(
+                    self.HillDEM.file_templates['composed_hillshade'].format(
                             base_name)), MESSAGE_LEVEL)
 
         else:
-            self.showMessage('Starting processing DTM data {}'.format(
+            self.showMessage('Starting processing DEM data {}'.format(
                                     base_name), MESSAGE_LEVEL)
 
-            self.dtm_array, self.no_data_value = raster_funs.raster_2_array(
+            self.dem_array, self.no_data_value = raster_funs.raster_2_array(
                                                         full_filename)
 
-            self.HillDTM = hillshader_process.HillshaderDTM(
+            self.HillDEM = hillshader_process.HillshaderDEM(
                                                      full_filename,
-                                                     self.dtm_array,
+                                                     self.dem_array,
                                                      self.no_data_value,
                                                      partialsCreateAndLoad,
                                                      sombrasOutResults,
@@ -585,7 +585,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                                                      out_path)
 
             self.showMessage('Process finisehd: {} file created'.format(
-                    self.HillDTM.file_templates['composed_hillshade'].format(
+                    self.HillDEM.file_templates['composed_hillshade'].format(
                             base_name)), MESSAGE_LEVEL)
 
     def createDictParams(self):

@@ -45,10 +45,10 @@ from .plugin_utils import lidar_process_funs as lidar_funs
 from .plugin_utils import raster_funs
 from .plugin_utils import files_and_dirs_funs
 
-class LiDAR2DTM(object):
+class LiDAR2DEM(object):
 
     def __init__(self, input_filename, out_path,
-                 partials_create_and_load, size_dtm, catalog_params=None):
+                 partials_create_and_load, size_dem, catalog_params=None):
         """Function to start class variables and launch the process
         """
 
@@ -56,7 +56,7 @@ class LiDAR2DTM(object):
         self.out_path = out_path
         self.catalog_params = catalog_params
         self.partials_create_and_load = partials_create_and_load
-        self.size_dtm = size_dtm
+        self.size_dem = size_dem
 
         self.init_paths()
         self.process()
@@ -85,12 +85,12 @@ class LiDAR2DTM(object):
 
         if self.partials_create_and_load:
             self.paths = {'las': self.out_paths['las'],
-                          'dtm': self.out_paths['dtm']}
+                          'dem': self.out_paths['dem']}
             dirs.append(self.out_dirs['las'])
-            dirs.append(self.out_dirs['dtm'])
+            dirs.append(self.out_dirs['dem'])
         else:
             self.paths = {'las': self.temp_paths['las'],
-                          'dtm': self.temp_paths['dtm']}
+                          'dem': self.temp_paths['dem']}
             dirs.append(self.temp_dirs['temp_dir'])
             dirs.append(self.temp_dirs['temp_dir'])
 
@@ -120,12 +120,12 @@ class LiDAR2DTM(object):
                                self.catalog_params,
                                self.paths['catalog'])
 
-        lidar_funs.create_dtm(
-            self.las_full_path, self.paths['dtm'], self.size_dtm)
+        lidar_funs.create_dem(
+            self.las_full_path, self.paths['dem'], self.size_dem)
 
-class HillshaderDTM(object):
+class HillshaderDEM(object):
 
-    def __init__(self, full_filename, dtm_array, no_data_value,
+    def __init__(self, full_filename, dem_array, no_data_value,
                  partialsCreateAndLoad, sombrasOutResults, hill_params,
                  out_path):
         """Function to start class variables and launch the process
@@ -141,13 +141,13 @@ class HillshaderDTM(object):
         if not os.path.exists(self.out_path):
             os.makedirs(self.out_path)
 
-        self.dtm_full_path = full_filename
+        self.dem_full_path = full_filename
         self.hill_params = hill_params
         self.partials_create_and_load = partialsCreateAndLoad
         self.sombras_out = sombrasOutResults
 
         self.init_paths()
-        self.process(dtm_array, no_data_value)
+        self.process(dem_array, no_data_value)
 
     def init_paths(self):
         """Function to init the output directory and the results full paths.
@@ -171,37 +171,37 @@ class HillshaderDTM(object):
             self.dirs['simple_hillshade'] = self.out_dirs['simple_hillshade']
             self.file_funs.create_dir(self.dirs['simple_hillshade'])
 
-    def process(self, dtm_array, no_data_value):
+    def process(self, dem_array, no_data_value):
         """This function works with the partial hillshades and generates the
         composed hillshade
         """
-        hillshade_1_array = hill.hillshade(dtm_array, no_data_value,
+        hillshade_1_array = hill.hillshade(dem_array, no_data_value,
                                            self.hill_params['azimuth1'],
                                            self.hill_params['angle_altitude1'])
-        hillshade_2_array = hill.hillshade(dtm_array, no_data_value,
+        hillshade_2_array = hill.hillshade(dem_array, no_data_value,
                                            self.hill_params['azimuth2'],
                                            self.hill_params['angle_altitude2'])
-        hillshade_3_array = hill.hillshade(dtm_array, no_data_value,
+        hillshade_3_array = hill.hillshade(dem_array, no_data_value,
                                            self.hill_params['azimuth3'],
                                            self.hill_params['angle_altitude3'])
 
         if self.partials_create_and_load:
             eroded_1 = raster_funs.raster_erosion(
-                    hillshade_1_array, dtm_array, no_data_value)
+                    hillshade_1_array, dem_array, no_data_value)
             hillshade1, hillshade1_filename = self.save_raster(
                     eroded_1,
                     self.hill_params['azimuth1'],
                     self.hill_params['angle_altitude1'])
 
             eroded_2 = raster_funs.raster_erosion(
-                    hillshade_2_array, dtm_array, no_data_value)
+                    hillshade_2_array, dem_array, no_data_value)
             hillshade2, hillshade2_filename = self.save_raster(
                     eroded_2,
                     self.hill_params['azimuth2'],
                     self.hill_params['angle_altitude2'])
             
             eroded_3 = raster_funs.raster_erosion(
-                    hillshade_3_array, dtm_array, no_data_value)
+                    hillshade_3_array, dem_array, no_data_value)
             hillshade3, hillshade3_filename = self.save_raster(
                     eroded_3,
                     self.hill_params['azimuth3'],
@@ -219,13 +219,13 @@ class HillshaderDTM(object):
                 [self.hill_params['transparency1'],
                  self.hill_params['transparency2'],
                  self.hill_params['transparency3']],
-                 dtm_array, no_data_value)
+                 dem_array, no_data_value)
 
         fn_hillshade_filename = \
             self.file_templates['composed_hillshade'].format(
                     self.input_base_name)
         raster_funs.array_2_raster(three_exp_array,
-                                   self.dtm_full_path,
+                                   self.dem_full_path,
                                    self.paths['composed_hillshade'])
 
         if self.sombras_out:
@@ -241,7 +241,7 @@ class HillshaderDTM(object):
         hillshade_path = os.path.join(self.dirs['simple_hillshade'],
                                       hillshade_filename)
         raster_funs.array_2_raster(hillshade_array,
-                                   self.dtm_full_path,
+                                   self.dem_full_path,
                                    hillshade_path)
 
         return hillshade_path, hillshade_filename

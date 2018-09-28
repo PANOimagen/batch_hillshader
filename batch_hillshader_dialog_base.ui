@@ -690,12 +690,12 @@
           <string>Set LiDAR classified ASPRS data (.*las) -- Processing with LasPy Library</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="2" column="0">
+          <item row="4" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QLabel" name="laspyPixelSizeLabel">
               <property name="text">
-               <string>Pixel size (meters) for Digital Terrain Model</string>
+               <string>Pixel size (meters) for Digital Terrain/Surface Model</string>
               </property>
              </widget>
             </item>
@@ -742,7 +742,7 @@
             </item>
            </layout>
           </item>
-          <item row="3" column="0">
+          <item row="5" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_14">
             <item>
              <widget class="QLabel" name="label_10">
@@ -761,9 +761,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="DTMTab">
+     <widget class="QWidget" name="DEMTab">
       <attribute name="title">
-       <string>Input Raster DTM</string>
+       <string>Input Raster DEM</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_11">
        <item row="0" column="0">
@@ -775,10 +775,10 @@
           </sizepolicy>
          </property>
          <property name="toolTip">
-          <string>Digital Terrain Model (DTM) file to process</string>
+          <string>Digital Elevation Model (DEM) file to process</string>
          </property>
          <property name="title">
-          <string>Digital Terrain Model (DTM)</string>
+          <string>Digital Elevation Model (DEM)</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="1" column="0">
@@ -792,7 +792,7 @@
                <enum>QLayout::SetMaximumSize</enum>
               </property>
               <item>
-               <widget class="QLabel" name="inputDTMLabel">
+               <widget class="QLabel" name="inputDEMLabel">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -800,15 +800,15 @@
                  </sizepolicy>
                 </property>
                 <property name="toolTip">
-                 <string>Digital Terrain Model (DTM) file to process</string>
+                 <string>Digital Elevation Model (DEM) file to process</string>
                 </property>
                 <property name="text">
-                 <string>Set Digital Terrain Model file (DTM)</string>
+                 <string>Set Digital Elevation Model file (DEM)</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="currentDTMPixelSizeLabel">
+               <widget class="QLabel" name="currentDEMPixelSizeLabel">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -828,7 +828,7 @@
                  </size>
                 </property>
                 <property name="toolTip">
-                 <string>Pixel size of selected DTM. Final Hillshade will be created with same spatial resolution</string>
+                 <string>Pixel size of selected DEM. Final Hillshade will be created with same spatial resolution</string>
                 </property>
                 <property name="text">
                  <string/>
@@ -846,7 +846,7 @@
                <enum>QLayout::SetMaximumSize</enum>
               </property>
               <item>
-               <widget class="QLineEdit" name="inputDTMLineEdit">
+               <widget class="QLineEdit" name="inputDEMLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -854,12 +854,12 @@
                  </sizepolicy>
                 </property>
                 <property name="toolTip">
-                 <string>Select as input Digital Terrain Model (DTM) data files (GEOTiff, ASCII)</string>
+                 <string>Select as input Digital Elevation Model (DEM) data files (GEOTiff, ASCII)</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QToolButton" name="inputDTMToolButton">
+               <widget class="QToolButton" name="inputDEMToolButton">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -867,7 +867,7 @@
                  </sizepolicy>
                 </property>
                 <property name="toolTip">
-                 <string>Select as input Digital Terrain Model (DTM) data files (GEOTiff, ASCII)</string>
+                 <string>Select as input Digital Elevation Model (DEM) data files (GEOTiff, ASCII)</string>
                 </property>
                 <property name="text">
                  <string>...</string>
@@ -1373,7 +1373,7 @@
              <enum>QLayout::SetMaximumSize</enum>
             </property>
             <item>
-             <widget class="QLabel" name="sizeDTMLabel">
+             <widget class="QLabel" name="sizeDEMLabel">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1384,15 +1384,15 @@
                </sizepolicy>
               </property>
               <property name="toolTip">
-               <string>Set the Digital Terrain Model spatial resolution (meters/pixel). </string>
+               <string>Set the Digital Elevation Model spatial resolution (meters/pixel). </string>
               </property>
               <property name="text">
-               <string>Pixel size (meters) for Digital Terrain Model</string>
+               <string>Pixel size (meters) for Digital Elevation Model</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="sizeDTMBox">
+             <widget class="QDoubleSpinBox" name="sizeDEMBox">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1403,7 +1403,7 @@
                </sizepolicy>
               </property>
               <property name="toolTip">
-               <string>Set the Digital Terrain Model spatial resolution (meters/pixel). </string>
+               <string>Set the Digital Elevation Model spatial resolution (meters/pixel). </string>
               </property>
               <property name="suffix">
                <string> meters/pixel</string>

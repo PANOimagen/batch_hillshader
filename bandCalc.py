@@ -40,7 +40,7 @@ import numpy as np
 from .plugin_utils import raster_funs
 
 def merge_arrays(input_arrays, alpha_values,
-        dtm_array, no_data_value, background_value=255):
+        dem_array, no_data_value, background_value=255):
     '''Merge several input_arrays with given transparency values.
 
     Alpha values is a list of floats between 0 and 1 with the same size as
@@ -50,6 +50,6 @@ def merge_arrays(input_arrays, alpha_values,
     for array, alpha in zip(input_arrays, alpha_values):
         output = array * alpha + (1 - alpha) * output
         
-    eroded_hill = raster_funs.raster_erosion(output, dtm_array, no_data_value)
+    eroded_hill = raster_funs.raster_erosion(output, dem_array, no_data_value)
 
     return eroded_hill.astype(array[0].dtype)

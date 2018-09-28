@@ -46,7 +46,7 @@ from osgeo import gdalconst
 from qgis.core import QgsRasterLayer, QgsProject
 
 def raster_2_array(raster_full_path):
-    """Read a raster dtm as array
+    """Read a raster dem as array
     """
     data_set = gdal.Open(raster_full_path)
     data_set_band = data_set.GetRasterBand(1)
@@ -55,12 +55,12 @@ def raster_2_array(raster_full_path):
     
     return raster_array, no_data_value
 
-def raster_erosion(raster_array, dtm_array, no_data_value):
+def raster_erosion(raster_array, dem_array, no_data_value):
     """ Function to eroded a raster array
     """
     try:
         eroded_array = raster_array * ndimage.binary_erosion(
-                dtm_array - no_data_value)
+                dem_array - no_data_value)
         return eroded_array
     
     except TypeError:

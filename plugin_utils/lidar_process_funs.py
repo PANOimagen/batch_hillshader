@@ -104,11 +104,11 @@ def create_catalog(ground_points, catalog_params, catalog_full_path):
 
     return process
 
-def create_dtm(las_full_path, dtm_full_path, size_dtm):
-    """Create dtm raster file from lidar ground points in las file
+def create_dem(las_full_path, dem_full_path, size_dem):
+    """Create dem raster file from lidar ground points in las file
     """
 
     process = processing.runalg('lidartools:blast2dem', 'verbose', 'False',
-        las_full_path, 8, size_dtm, 0, 0, 'False', '', dtm_full_path)
+        las_full_path, 8, size_dem, 0, 0, 'False', '', dem_full_path)
 
     return process
