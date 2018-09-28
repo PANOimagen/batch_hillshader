@@ -284,8 +284,14 @@ class RasterizeLiDAR(object):
         out_name = templates_dict['dem'].format(name)
         self.dirs = self.files_utils.set_output_dir(out_path)[0]
         
-        self.dtm_full_path = os.path.join(self.dirs['dtm'], out_name)
         self.files_utils.create_dir(self.dirs['dem'])
+        if terrain:
+            prefix = 'Terrain_'
+        if surfaces:
+            prefix = 'Surfaces_'
+            
+        self.dem_full_path = os.path.join(self.dirs['dem'], (
+                        prefix + out_name))
 
 #        lidar_extent = [(max(self.x_dimension), max(self.y_dimension)), 
 #                        (max(self.x_dimension), min(self.y_dimension)), 
