@@ -49,7 +49,7 @@ from .plugin_utils import files_and_dirs_funs as dir_fns
 try:
     from qgis.core import Qgis
     MESSAGE_LEVEL = Qgis.MessageLevel(0)
-except ImportError, AttributeError:
+except ImportError:
     MESSAGE_LEVEL = QgsMessageBar.INFO
 
 try:
