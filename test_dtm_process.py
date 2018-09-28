@@ -48,15 +48,15 @@ import bandCalc
 
 from plugin_utils import raster_funs
 
-class DTMProcessTestCase(unittest.TestCase):
+class DEMProcessTestCase(unittest.TestCase):
 
     def setUp(self):
         """Initializing input data and dictionaries
         """
-        self.input_dtm_file = '.\\test_data\\dtm_input'
+        self.input_dem_file = '.\\test_data\\dem_input'
         ext = '.tif'
         # ext = '.asc'
-        self.input_dtm = self.input_dtm_file + ext
+        self.input_dem = self.input_dem_file + ext
 
         hillshade_params = {}
         hillshade_params['azimuth1'] = 350
@@ -73,19 +73,19 @@ class DTMProcessTestCase(unittest.TestCase):
     def test_input(self):
         """Test for input data
         """
-        self.assertTrue(os.path.exists(self.input_dtm))
+        self.assertTrue(os.path.exists(self.input_dem))
 
     def test_generating_hillshades_array(self):
-        """test generating partial hillshades arrays from dtm
+        """test generating partial hillshades arrays from dem
         """
-        dtm_array = raster_funs.raster_2_array(self.input_dtm)
-        hillshade_1 = hillshade.hillshade(dtm_array,
+        dem_array = raster_funs.raster_2_array(self.input_dem)
+        hillshade_1 = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth1'],
                                           self.hill_params['angle_altitude1'])
-        hillshade_2 = hillshade.hillshade(dtm_array,
+        hillshade_2 = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth2'],
                                           self.hill_params['angle_altitude2'])
-        hillshade_3 = hillshade.hillshade(dtm_array,
+        hillshade_3 = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth3'],
                                           self.hill_params['angle_altitude3'])
 
@@ -94,7 +94,7 @@ class DTMProcessTestCase(unittest.TestCase):
         self.assertIsNotNone(hillshade_3)
 
     def test_generating_hillshades_raster(self):
-        """test generating partial hillshades rasters from dtm
+        """test generating partial hillshades rasters from dem
         """
         temp_dir = tempfile.mkdtemp()
 
@@ -102,10 +102,10 @@ class DTMProcessTestCase(unittest.TestCase):
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
-        array = raster_funs.raster_2_array(self.input_dtm)
+        array = raster_funs.raster_2_array(self.input_dem)
 
         raster_funs.array_2_raster(array,
-                                   self.input_dtm,
+                                   self.input_dem,
                                    os.path.join(output_folder, 'file.tif'))
 
         self.assertTrue(os.path.exists(
@@ -114,14 +114,14 @@ class DTMProcessTestCase(unittest.TestCase):
     def test_combinig_hillshades_arrays(self):
         """test combining arrays (band calculator)
         """
-        dtm_array = raster_funs.raster_2_array(self.input_dtm)
-        hillshade_1_array = hillshade.hillshade(dtm_array,
+        dem_array = raster_funs.raster_2_array(self.input_dem)
+        hillshade_1_array = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth1'],
                                           self.hill_params['angle_altitude1'])
-        hillshade_2_array = hillshade.hillshade(dtm_array,
+        hillshade_2_array = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth2'],
                                           self.hill_params['angle_altitude2'])
-        hillshade_3_array = hillshade.hillshade(dtm_array,
+        hillshade_3_array = hillshade.hillshade(dem_array,
                                           self.hill_params['azimuth3'],
                                           self.hill_params['angle_altitude3'])
 
@@ -137,7 +137,7 @@ class DTMProcessTestCase(unittest.TestCase):
             os.mkdir(output_folder)
 
         out_put = os.path.join(output_folder, 'combined_hillshade.tif')
-        raster_funs.array_2_raster(combined_array, self.input_dtm, out_put)
+        raster_funs.array_2_raster(combined_array, self.input_dem, out_put)
 
         self.assertTrue(os.path.exists(out_put))
 
