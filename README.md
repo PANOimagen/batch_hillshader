@@ -31,9 +31,17 @@ For processing LiDAR data (allways in ASPRS format *.laz, and *.las) you must to
 
 You can use LasPy Library (BSD License) to generate a three exposure hillshade from *.las ASPRS format:
 
-  To install LasPy Library, you must launch the following line at OSGEO Shell:
+    By default OSGeo console runs with Python 2, you need to configure the console to run with Python 3, so launch, from QGIS installation folder (Windows):
 
-        > python -m pip install laspy
+    bin\py3_env.bat
+
+    bin\qt5_env.bat
+
+    python -m pip install numpy
+
+    python -m pip install scipy
+
+    python -m pip install laspy
     
   LasPy documentation is avaible at: *https://github.com/laspy/laspy*
   
