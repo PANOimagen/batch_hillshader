@@ -39,14 +39,7 @@ You can use LasPy Library (BSD License) to generate a three exposure hillshade f
   
   If the process option with the LasPy library is not activated once it has been installed, you must restart QGIS.
 
-  If you need to process compressed LiDAR data (*.laz format) and you want to use Free Open Source Software you can unzip laz format to las                     format using LasZip Library:
-  LasZip is LGPL License and you can found it at: *https://www.laszip.org/*
-
-If you uses as input LiDAR data, note that plugin uses LASTools library.
-        See LASTools License at: *https://rapidlasso.com/lastools/*
-
-At the process with LiDAR data, user can generates the FUSION LDV Catalog report with the ground points, to check the input 
-data quality (returns density, number of returns, return intensity, ...).
+  Plugin uses LASzip to unzip LiDAR data (*.laz format to *.las format). LasZip is LGPL License and you can found it at: *https://www.laszip.org/*
 
 KeyWords = Shaded Relief, Hillshade, Digital Terrain Model, DTM, LiDAR, Batch Hillshade Processing, Three Exposure Hillshade, Digital Surfaces Model, MDS, Digital Elevation Model, MDE
 

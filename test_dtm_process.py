@@ -8,11 +8,7 @@
 
     For more information, see the program documentation.
 
-    If you uses as input LiDAR data, note that plugin uses LASTools library.
-        See LASTools License at  <https://rapidlasso.com/lastools/>
-
-    Plugin also use in LiDAR data mode FUSION LDV.
-        See FUSION LDV License at <http://forsys.cfr.washington.edu/fusion.html>
+    Plugin uses LASzip, see <https://laszip.org/>
                               -------------------
         begin                : 2016-07-13
         git sha              : $Format:%H$

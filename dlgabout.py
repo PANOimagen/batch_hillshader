@@ -82,18 +82,15 @@ class DlgAbout(QDialog, FormClass):
                               u' information, please, read<br>metadata/' +
                               u'readme and/or contact the author.')
         
-        external_dependencies = ('This plugin needs the <b>Processing' +
-                                 u' Plugin</b> and uses external libraries' +
-                                 u' for LiDAR processing mode,<br>see the' 
+        external_dependencies = ('This plugin uses external libraries' +
+                                 u' for LiDAR processing mode, see the' 
                                  u' corresponding licenses:<br>        +' +
-                                 u' LASTools Library: <b><address>' +
-                                 u'https://rapidlasso.com/lastools/' +
-                                 u'</address></b> <br>        + FUSION' +
-                                 u' LDV Software: <b><address>http://forsys.' +
-                                 u'cfr.washington.edu/fusion.html' +
-                                 u'</address></b><br>Also you can use <b>LasPy ' +
-                                 u' Library</b> (BSD License):<b><address>' +
-                                 u'https://github.com/laspy/laspy' +
+                                 u' You can use <b>LasPy Library</b>' +
+                                 u' (BSD License): <b><address>' +
+                                 u' https://github.com/laspy/laspy' +
+                                 u'</address></b><br>        +' +
+                                 u' Plugin also uses <b>LASZip Library</b>:' +
+                                 u'<b><address> https://laszip.org/' +
                                  u'</address></b>')
         
         license_info = (u'<h3>License:' +
