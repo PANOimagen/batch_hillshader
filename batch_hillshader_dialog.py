@@ -8,11 +8,7 @@
 
     For more information, see the program documentation.
 
-    If you uses as input LiDAR data, note that plugin uses LASTools library.
-        See LASTools License at  <https://rapidlasso.com/lastools/>
-
-    Plugin also use in LiDAR data mode FUSION LDV.
-        See FUSION LDV License at <http://forsys.cfr.washington.edu/fusion.html>
+    Plugin uses LASzip, see <https://laszip.org/>
                               -------------------
         begin                : 2016-07-13
         git sha              : $Format:%H$
@@ -39,7 +35,6 @@
 
 import os
 from osgeo import gdal
-from .plugin_utils import lidar_process_funs as lidar_funs
 from qgis.PyQt import QtWidgets, uic
 from qgis.gui import QgsMessageBar
 from . import hillshader_process
@@ -52,10 +47,12 @@ try:
 except ImportError:
     MESSAGE_LEVEL = QgsMessageBar.INFO
 
+from .bh_errors import LasPyNotFoundError
+
 try:
     from . import laspy_utils
     HAS_LASPY = True
-except ImportError:
+except LasPyNotFoundError as e:
     HAS_LASPY = False
 
 try:
@@ -89,14 +86,9 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.accepted.connect(self.preparingProcess)
         self.buttonBox.rejected.connect(self.reject)
-        self.LidarFilesGroupBox.setChecked(False)
-        self.runCatalogCheckBox.setChecked(False)
-        self.laspyCheckBox.setChecked(False)
         self.loadHillShadeCheckBox.setChecked(True)
         self.loadPartialsCheckBox.setChecked(False)
-        self.sizeDEMBox.setEnabled(False)
-        self.sizeDEMLabel.setEnabled(False)
-        self.laspyGroupBox.setEnabled(False)
+        self.laspyGroupBox.setEnabled(HAS_LASPY)
         self.copyrightLabel.setText('(C) 2017 by Panoimagen S.L.')
 #        self.laspyRecomendedPixelLabel.setText(
 #                'Recomended pixel size: - meters')
@@ -104,104 +96,28 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
                 'Input DEM pixel size: - x - meters')
         self.currentPxSizeLabel.setText(
                 'Selected pixel size for hillshade results: - x - meters')
-        self.inputLidarToolButton.clicked.connect(self.lidarProcess)
         self.laspyToolButton.clicked.connect(self.laspyProcess)
         self.outputFolderToolButton.clicked.connect(self.setOutPath)
         self.inputDEMToolButton.clicked.connect(self.DEMProcess)
-        self.LidarProcessCheckBox.clicked.connect(self.updateUi)
-        self.LidarProcessCheckBox.clicked.connect(
-                self.hillshadePixelSize)
-        self.laspyCheckBox.clicked.connect(self.updateUi)
-        self.laspyCheckBox.clicked.connect(self.hillshadePixelSize)
-        self.runCatalogCheckBox.clicked.connect(self.updateUi)
+        self.InputFilesOptions.currentChanged.connect(self.updateUi)
+        self.InputFilesOptions.currentChanged.connect(self.hillshadePixelSize)
         self.inputDEMLineEdit.textChanged.connect(self.updateDEMPixelSize)
-        self.sizeDEMBox.valueChanged.connect(self.hillshadePixelSize)
         self.laspyPixelSizeDoubleSpinBox.valueChanged.connect(
                 self.hillshadePixelSize)
         self._initVersion()
-        self.initLastoolsPathsUi()
         self.initLaspyUi()
+        
+        if HAS_LASPY:
+            self.InputFilesOptions.setCurrentIndex(0)
+        else:
+            self.InputFilesOptions.setCurrentIndex(1)
 
-# TODO: connect this objects: laspyCheckBox, laspyLineEdit, laspyPixelSizeDoubleSpinBox, laspyRecomendedPixelLabel, laspyGroupBox
+# TODO: connect this objects: laspyLineEdit, laspyPixelSizeDoubleSpinBox, laspyRecomendedPixelLabel, laspyGroupBox
 
     def _initVersion(self):
         self.versionLabel.setText('Batch Hillshader version {}'.format(
                 version.VERSION))
-        
-    @staticmethod
-    def checkProcessingAvaible():
-        """Check if processing plugin is avaible
-        """
-        try:
-            return lidar_funs.search_lastools_path() != ''
-        except AttributeError:
-            return False
 
-    @staticmethod
-    def checkLASToolsPath():
-        """Return LASTools_path and True if LASTools_path exists
-        """
-        path = lidar_funs.search_lastools_path()
-        return path, path != ''
-
-    @staticmethod
-    def checkFusionPath():
-        """Return Fusion_path and True if Fusion_path exists
-        """
-        path = lidar_funs.search_fusion_path()
-        return path, path != ''
-
-    def _initLastoolsUI(self, processing_funs, LASTools_path, Fusion_path):
-        """This function enabled/disabled the lidar processing options and
-            define the labels for user information
-        """
-        self.LidarProcessCheckBox.setEnabled(processing_funs)
-        self.LidarProcessCheckBox.setEnabled(LASTools_path != '')
-        self.runCatalogCheckBox.setEnabled(Fusion_path != '')
-
-        if not processing_funs:
-            processing_label = ('The Processing Plugin is not avaible,' +
-                                ' LiDAR Processing mode disabled. Please,' +
-                                ' read Batch Hillshader documentation')
-            LASTools_label = 'not found'
-            FUSION_label = 'not found'
-            Proc_label_color = 'color: red'
-            LASTools_label_color = 'color: red'
-            Fusion_label_color = 'color: red'
-        else:
-            processing_label = ('The Processing Plugin is avaible,' +
-                                ' LiDAR Processing mode enabled')
-            Proc_label_color = u'color: black'
-            if not LASTools_path:
-                LASTools_label = u'not found'
-                LASTools_label_color = 'color: red'
-            else:
-                LASTools_label = LASTools_path
-                LASTools_label_color = 'color: black'
-            if not Fusion_path:
-                FUSION_label = u'not found'
-                Fusion_label_color = 'color: red'
-            else:
-                FUSION_label = Fusion_path
-                Fusion_label_color = 'color: black'
-
-        self.LASToolsFolderLabel.setText(u'LASTools folder: {}'.format(
-                LASTools_label))
-        self.LASToolsFolderLabel.setStyleSheet(LASTools_label_color)
-        self.FusionFolderLabel.setText(u'FUSION folder: {}'.format(
-                FUSION_label))
-        self.FusionFolderLabel.setStyleSheet(Fusion_label_color)
-        self.ProcessingModuleLabel.setText(processing_label)
-        self.ProcessingModuleLabel.setStyleSheet(Proc_label_color)
-
-    def initLastoolsPathsUi(self):
-        processing_funs = self.checkProcessingAvaible()
-        LASTools_path, LASTools_exists = self.checkLASToolsPath()
-        Fusion_path, Fusion_exists = self.checkFusionPath()
-        self._initLastoolsUI(processing_funs,
-                             LASTools_path,
-                             Fusion_path)
-        
     def initLaspyUi(self):
 # TODO: user can select both (terrain and surfaces)        
 #        results_options = ['Terrain', 'Surfaces',
@@ -220,7 +136,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             surname_label = u'installed'
             label_color = 'color: black'
             
-        self.laspyCheckBox.setEnabled(HAS_LASPY)
+        self.LiDARLasPyTab.setEnabled(HAS_LASPY)
         self.laspyImportLabel.setText(laspy_text.format(surname_label))
         self.laspyImportLabel.setStyleSheet(label_color)
         
@@ -228,34 +144,24 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
     def updateUi(self):
         """Update UI QObjects
         """
+        if self.InputFilesOptions.currentIndex() == 0:
+            self.laspy_checked = True
+        else:
+            self.laspy_checked = False
 
-        self.lidar_checked = self.LidarProcessCheckBox.isChecked()
-        self.laspy_checked = self.laspyCheckBox.isChecked()
-
-        if self.lidar_checked or self.laspy_checked:
+        if self.laspy_checked:
             disable_DEM = True
             self.inputDEMLineEdit.clear()
             self.currentDEMPixelSizeLabel.setText(
                 'Input DEM pixel size: - x - meters')
         else:
-            disable_DEM = False  
-            self.inputLidarLineEdit.clear()
-            self.runCatalogCheckBox.setChecked(False)
+            disable_DEM = False
             self.laspyLineEdit.clear()
 
-        self.catalog_checked = self.runCatalogCheckBox.isChecked()
-
-        self.inputLidarLineEdit.setEnabled(self.lidar_checked)
-        self.inputLidarToolButton.setEnabled(self.lidar_checked)
-        self.LidarFilesGroupBox.setEnabled(self.lidar_checked)
-        self.sizeDEMBox.setEnabled(disable_DEM)
-        self.sizeDEMLabel.setEnabled(disable_DEM)
-        self.runCatalogCheckBox.setEnabled(self.lidar_checked)
         self.inputDEMLineEdit.setEnabled(not disable_DEM)
         self.inputDEMToolButton.setEnabled(not disable_DEM)
         self.currentDEMPixelSizeLabel.setEnabled(not disable_DEM)
         self.inputDEMLabel.setEnabled(not disable_DEM)
-        self.catalogGroupBox.setEnabled(self.catalog_checked)
         self.laspyGroupBox.setEnabled(self.laspy_checked)
 
     def updateDEMPixelSize(self):
@@ -285,14 +191,8 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         """
 
         try:
-            if self.LidarProcessCheckBox.isChecked():
-                dem_pixel_size = [self.sizeDEMBox.value(),
-                                  -(self.sizeDEMBox.value())]
-                self.updateHillshadeSizeLabel(dem_pixel_size[0],
-                                                   dem_pixel_size[-1])
-                return
             
-            elif self.laspyCheckBox.isChecked():
+            if self.InputFilesOptions.currentIndex() == 0:
                 dem_pixel_size = [self.laspyPixelSizeDoubleSpinBox.value(),
                                   -(self.laspyPixelSizeDoubleSpinBox.value())]    
                 self.updateHillshadeSizeLabel(dem_pixel_size[0], 
@@ -319,24 +219,6 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.currentPxSizeLabel.setText(
                 'Selected pixel size for hillshade results:' +
                  ' {} x {} meters'.format(str(x), str(y)))
-
-    def lidarProcess(self):
-        """Processing with Lidar data. Using Fusion and Lastools Set input file and start output folder
-        """
-        fileNames = getOpenFileNames(self,
-                "Select the input LiDAR file/s",
-                self.inputLidarToolButton.text(),
-                ("LiDAR files (*.laz *.LAZ *.las *.LAS);;" +
-                 " LAZ (*.laz *.LAZ);;LAS (*.las *.LAS);;" +
-                 " All files (*)"))
-        if fileNames:
-            # quoted = ['"{}"'.format(fn) for fn in fileNames]
-            self.inputLidarLineEdit.setText(", ".join(fileNames[0]))
-            if not self.outputFolderLineEdit.text():
-                outPath = os.path.join(
-                    os.path.split(os.path.abspath(fileNames[0][0]))[0],
-                    'batch_hillshader_output')
-                self.outputFolderLineEdit.setText(outPath)
     
     def laspyProcess(self):
         """ Processing with Lidar data. Using laspy library Set input file 
@@ -344,17 +226,20 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         """
         fileNames = getOpenFileNames(self,
                 "Select the input LiDAR file/s",
-                self.inputLidarToolButton.text(),
-                ("LiDAR *.las files (*.las *.LAS);;" +
+                self.laspyToolButton.text(),
+                ("LiDAR files (*.laz *.LAZ *.las *.LAS);;" +
                  " All files (*)"))
         if fileNames:
             # quoted = ['"{}"'.format(fn) for fn in fileNames]
             self.laspyLineEdit.setText(", ".join(fileNames[0]))
             if not self.outputFolderLineEdit.text():
-                outPath = os.path.join(
-                    os.path.split(os.path.abspath(fileNames[0][0]))[0],
-                    'batch_hillshader_output')
-                self.outputFolderLineEdit.setText(outPath)
+                try:
+                    outPath = os.path.join(
+                        os.path.split(os.path.abspath(fileNames[0][0]))[0],
+                        'batch_hillshader_output')
+                    self.outputFolderLineEdit.setText(outPath)
+                except IndexError:
+                    pass
                 
     def DEMProcess(self):
         """Processing with DEM data. Set input file and start output folder
@@ -390,11 +275,8 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             This function launch also the function to set the
             process parameters
         """
-        if self.LidarProcessCheckBox.isChecked():
-            filenames = self.inputLidarLineEdit.text()
-            self.processMode = 'LidarInput'
         
-        elif self.laspyCheckBox.isChecked():
+        if self.InputFilesOptions.currentIndex() == 0:
             filenames = self.laspyLineEdit.text()
             self.processMode = 'laspyInput'
         
@@ -427,9 +309,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.createDictParams()
         partialsCreateAndLoad = self.loadPartialsCheckBox.isChecked()
         sombrasOutResults = self.loadHillShadeCheckBox.isChecked()
-        if self.LidarProcessCheckBox.isChecked():
-            sizeDEM = self.sizeDEMBox.value()
-        elif self.laspyCheckBox.isChecked():
+        if self.InputFilesOptions.currentIndex() == 0:
             sizeDEM = self.laspyPixelSizeDoubleSpinBox.value()
             
         _, filename = os.path.split(full_filename)
@@ -452,67 +332,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         
         self.dir_funs = dir_fns.DirAndPaths()
         
-        if self.LidarProcessCheckBox.isChecked():
-
-            self.showMessage(u'Starting processing LiDAR data {}'.format(
-                                    base_name) +
-                             u' with FUSION LDV and LASTools Library', 
-                             MESSAGE_LEVEL)
-
-            self.lidar2dem = hillshader_process.LiDAR2DEM(
-                                                     full_filename,
-                                                     out_path,
-                                                     partialsCreateAndLoad,
-                                                     sizeDEM,
-                                                     self.catalog_params)
-
-            if self.catalog_params:
-                self.showMessage((u'Catalog report for ground LiDAR' +
-                                  u' points ready'),MESSAGE_LEVEL)
-
-            dem_full_path = self.lidar2dem.paths['dem']
-            self.dem_array, self.no_data_value = raster_funs.raster_2_array(
-                        dem_full_path)
-
-            if partialsCreateAndLoad:
-                dem_filename, _ = os.path.splitext(
-                        os.path.split(dem_full_path)[-1])
-                raster_funs.load_raster_layer(
-                            dem_full_path,
-                            dem_filename)
-
-            self.showMessage('Processing data... {}'.format(base_name),
-                                  MESSAGE_LEVEL)
-
-            self.HillDEM = hillshader_process.HillshaderDEM(
-                                                     dem_full_path,
-                                                     self.dem_array,
-                                                     self.no_data_value,
-                                                     partialsCreateAndLoad,
-                                                     sombrasOutResults,
-                                                     self.hill_params,
-                                                     out_path)
-
-            if partialsCreateAndLoad:
-                temp_files_list = os.listdir(
-                        self.lidar2dem.temp_dirs['temp_dir'])
-                if len(temp_files_list) != 0:
-                    for temp_file in temp_files_list:
-                        file_path = os.path.join(
-                                self.lidar2dem.temp_dirs['temp_dir'],
-                                temp_file)
-                        self.dir_funs.remove_temp_file(file_path)
-                temp_files_list = os.listdir(
-                        self.lidar2dem.temp_dirs['temp_dir'])
-                if len(temp_files_list) == 0:
-                    self.dir_funs.remove_temp_dir(
-                            self.lidar2dem.temp_dirs['temp_dir'])
-
-            self.showMessage('Process finisehd: {} file created'.format(
-                    self.HillDEM.file_templates['composed_hillshade'].format(
-                            base_name)), MESSAGE_LEVEL)
-        
-        elif self.laspyCheckBox.isChecked():
+        if self.InputFilesOptions.currentIndex() == 0:
 
             self.showMessage('Starting processing LiDAR data {}'.format(
                                     base_name) +
@@ -532,6 +352,9 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
 #            elif self.process_option == 'Both (Surfaces and Terrain)':
 #                terrain = True
 #                surfaces = True
+
+            if not os.path.exists(out_path):
+                os.makedirs(out_path)
 
             self.laspyLidar = laspy_utils.LiDAR(full_filename,
                                                 out_path,
@@ -623,21 +446,6 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             One dictionary for FUSION catalog report and the other for
             the three light exposures of the hillshades
         """
-        if self.runCatalogCheckBox.isChecked():
-            self.catalog_params = {
-                    'size_density': self.sizeDensityBox.value(),
-                    'min_density': self.minDensityBox.value(),
-                    'max_density': self.maxDensityBox.value(),
-                    'size1_density': self.size1ReturnBox.value(),
-                    'min1_density': self.min1ReturnBox.value(),
-                    'max1_density': self.max1ReturnBox.value(),
-                    'size_intensity': self.sizeIntenBox.value(),
-                    'min_intensity': self.minIntenBox.value(),
-                    'max_intensity': self.maxIntenBox.value()
-                    }
-
-        else:
-            self.catalog_params = None
 
         self.hill_params = {
                 'azimuth1': self.azimuth1DoubleSpinBox.value(),

@@ -8,11 +8,7 @@
 
     For more information, see the program documentation.
 
-    If you uses as input LiDAR data, note that plugin uses LASTools library.
-        See LASTools License at  <https://rapidlasso.com/lastools/>
-
-    Plugin also use in LiDAR data mode FUSION LDV.
-        See FUSION LDV License at <http://forsys.cfr.washington.edu/fusion.html>
+    Plugin uses LASzip, see <https://laszip.org/>
                               -------------------
         begin                : 2016-07-13
         git sha              : $Format:%H$
@@ -47,9 +43,11 @@ import laspy
 from laspy.file import File
 from laspy.header import Header
 
+from . import run_LASzip
+
 class LiDAR(object):
 
-    def __init__(self, in_las_path, out_path, partials_create, 
+    def __init__(self, in_lidar_path, out_path, partials_create, 
                  terrain=False, surfaces=False):
         
         """ Init variables
@@ -62,8 +60,22 @@ class LiDAR(object):
             # TODO
             pass
 
-        self.in_las_path = in_las_path
-        self.path, full_name = os.path.split(in_las_path)
+        self.in_lidar_path = in_lidar_path
+        self.path, full_name = os.path.split(in_lidar_path)
+        filename, ext = os.path.splitext(full_name)
+        if ext.lower() == '.laz':
+            ret, las_path = run_LASzip.run_LASzip(self.in_lidar_path, out_path)
+            self.laz = True
+            if ret:
+                self.in_las_path = las_path
+            else:
+                return
+        else:
+            pass
+        if ext.lower() == '.las':
+            self.laz = False
+            self.in_las_path = self.in_lidar_path
+            
         self.files_utils = files_and_dirs_funs.DirAndPaths()
         self.name, self.extension = self.files_utils.init(full_name)
         self.partials_create = partials_create

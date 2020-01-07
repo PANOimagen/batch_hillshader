@@ -41,7 +41,6 @@ import os
 
 from . import hillshade as hill
 from . import bandCalc
-from .plugin_utils import lidar_process_funs as lidar_funs
 from .plugin_utils import raster_funs
 from .plugin_utils import files_and_dirs_funs
 
