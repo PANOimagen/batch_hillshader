@@ -24,7 +24,7 @@ about=This plugin generates a three light exposure hillshade (shaded relief by c
 
 # Uncomment the following line and add your changelog:
 # changelog=
-	2.4.1 : ModuleNotFoundError due LASPy Library -> LasPyNotFoundError
+        2.4.1 : ModuleNotFoundError due LASPy Library -> LasPyNotFoundError
         2.4.0 : Deleted external dependencies (FUSION and LASTools). Process with zipped LiDAR files is available (LASzip)
         2.3.0 : Added option to generate a terrain hillshade and a surface hillshade at LasPy mode
 
