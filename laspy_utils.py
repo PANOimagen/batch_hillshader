@@ -39,9 +39,14 @@ from scipy.interpolate import griddata
 from osgeo import gdal, osr
 from gdal import gdalconst
 from .plugin_utils import files_and_dirs_funs
-import laspy
-from laspy.file import File
-from laspy.header import Header
+
+from .bh_errors import LasPyNotFoundError
+try:
+    import laspy
+    from laspy.file import File
+    from laspy.header import Header
+except ModuleNotFoundError:
+    raise LasPyNotFoundError
 
 from . import run_LASzip
 
