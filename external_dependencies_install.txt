@@ -1,4 +1,4 @@
-For processing LiDAR data (allways in ASPRS format [*.laz, and *.las]) you must to install some external dependecies:
+For processing LiDAR data (allways in ASPRS format [*.las]) you must to install some external dependecies:
 
 You can use LasPy Library (BSD License) to generate a three exposure hillshade from *.las ASPRS format:
 
@@ -9,6 +9,3 @@ You can use LasPy Library (BSD License) to generate a three exposure hillshade f
     LasPy documentation is avaible at:
     
         https://github.com/laspy/laspy
-
-    Plugin runs with LasZip Library if you select a *.laz file:
-        LasZip is LGPL License and you can found it at: https://www.laszip.org/
