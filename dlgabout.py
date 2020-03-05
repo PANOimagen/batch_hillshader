@@ -88,10 +88,7 @@ class DlgAbout(QDialog, FormClass):
                                  u' You can use <b>LasPy Library</b>' +
                                  u' (BSD License): <b><address>' +
                                  u' https://github.com/laspy/laspy' +
-                                 u'</address></b><br>        +' +
-                                 u' Plugin also uses <b>LASZip Library</b>:' +
-                                 u'<b><address> https://laszip.org/' +
-                                 u'</address></b>')
+                                 u'</address></b><br>')
         
         license_info = (u'<h3>License:' +
                         u'</h3>This program is free software' +

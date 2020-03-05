@@ -227,7 +227,7 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
         fileNames = getOpenFileNames(self,
                 "Select the input LiDAR file/s",
                 self.laspyToolButton.text(),
-                ("LiDAR files (*.laz *.LAZ *.las *.LAS);;" +
+                ("LiDAR files (*.las *.LAS);;" +
                  " All files (*)"))
         if fileNames:
             # quoted = ['"{}"'.format(fn) for fn in fileNames]

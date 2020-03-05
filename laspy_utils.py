@@ -48,8 +48,6 @@ try:
 except ModuleNotFoundError:
     raise LasPyNotFoundError
 
-from . import run_LASzip
-
 class LiDAR(object):
 
     def __init__(self, in_lidar_path, out_path, partials_create, 
@@ -68,18 +66,11 @@ class LiDAR(object):
         self.in_lidar_path = in_lidar_path
         self.path, full_name = os.path.split(in_lidar_path)
         filename, ext = os.path.splitext(full_name)
-        if ext.lower() == '.laz':
-            ret, las_path = run_LASzip.run_LASzip(self.in_lidar_path, out_path)
-            self.laz = True
-            if ret:
-                self.in_las_path = las_path
-            else:
-                return
-        else:
-            pass
         if ext.lower() == '.las':
             self.laz = False
             self.in_las_path = self.in_lidar_path
+        else:
+            pass
             
         self.files_utils = files_and_dirs_funs.DirAndPaths()
         self.name, self.extension = self.files_utils.init(full_name)

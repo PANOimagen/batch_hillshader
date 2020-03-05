@@ -660,7 +660,7 @@
           <bool>false</bool>
          </property>
          <property name="title">
-          <string>Set LiDAR classified ASPRS data (*.laz, *.las) -- Processing with LasPy Library</string>
+          <string>Set LiDAR classified ASPRS data (*.LAS, *.las) -- Processing with LasPy Library</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="4" column="0">

@@ -4,17 +4,15 @@ qgisMinimumVersion=2.8
 qgisMaximumVersion=3.99
 description= Plugin to generate a three light exposure hillshade (shaded relief by combining three light exposures)
 category=Raster
-version=2.4.1
+version=2.4.2
 author=PANOimagen S.L.
 email=info@panoimagen.com
 
 about=This plugin generates a three light exposure hillshade (shaded relief by combining three light exposures) using
-    as input LiDAR classified data (ASPRS classification / *.laz, *.las formats) or a Digital Terrain Model (DTM) in
+    as input LiDAR classified data (ASPRS classification / *.las format) or a Digital Terrain Model (DTM) in
     raster format (GEOTiff / ASCII). The three light exposures combining method is based in Gantenbein (2012): <(http://pubs.usgs.gov/of/2012/1171/)>
 
     You can use LasPy Library to process LiDAR data (ASPRS las format). From version 2.3.0 user can generates a terrain hillshade and a surfaces hillshade (only with LasPy processing mode). The surfaces hillshade is generated using only the first LiDAR returns.
-        
-    Plugin uses LASzip to unzip LiDAR data.
 
     For more information see readme.md at plugin folder (see Installed version at the end)
 
@@ -24,6 +22,7 @@ about=This plugin generates a three light exposure hillshade (shaded relief by c
 
 # Uncomment the following line and add your changelog:
 # changelog=
+        2.4.2 : Process with zipped LiDAR files is not available. Only process unzipped LiDAR files
         2.4.1 : ModuleNotFoundError due LASPy Library -> LasPyNotFoundError
         2.4.0 : Deleted external dependencies (FUSION and LASTools). Process with zipped LiDAR files is available (LASzip)
         2.3.0 : Added option to generate a terrain hillshade and a surface hillshade at LasPy mode
