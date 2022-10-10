@@ -1,6 +1,6 @@
 # Batch Hillshader
 
-QGIS minimum version = 2.8
+QGIS minimum version = 3.16
 
 QGIS maximum version = 3.99
 
