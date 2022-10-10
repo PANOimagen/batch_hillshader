@@ -36,8 +36,7 @@
 import numpy as np
 import os
 from scipy.interpolate import griddata
-from osgeo import gdal, osr
-from gdal import gdalconst
+from osgeo import gdal, osr, gdalconst
 from .plugin_utils import files_and_dirs_funs
 
 from .bh_errors import LasPyNotFoundError
