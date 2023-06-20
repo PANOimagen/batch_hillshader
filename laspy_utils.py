@@ -42,8 +42,7 @@ from .plugin_utils import files_and_dirs_funs
 from .bh_errors import LasPyNotFoundError
 try:
     import laspy
-    from laspy.file import File
-    from laspy.header import Header
+
 except ModuleNotFoundError:
     raise LasPyNotFoundError
 
@@ -61,6 +60,9 @@ class LiDAR(object):
         elif self.surfaces:
             # TODO
             pass
+        
+        """ Obtein laspy version"""
+        self.laspy_version = self.get_laspy_version()
 
         self.in_lidar_path = in_lidar_path
         self.path, full_name = os.path.split(in_lidar_path)
@@ -82,6 +84,12 @@ class LiDAR(object):
         self.get_file_extent()
         self.get_file_density()
         self.get_points_arrays()
+
+    def get_laspy_version(self):
+        """ Obtein laspy version"""
+        version = laspy.__version__
+        return version[0]
+
 
     def process(self):
         
@@ -105,14 +113,25 @@ class LiDAR(object):
     def read_las_file(self):
         """ Read the input LiDAR file in las format. Not laz format
         """
-        self.in_file = File(self.in_las_path, mode='r')
-        self.scale = self.in_file.header.scale
-        self.offset = self.in_file.header.offset
+        if self.laspy_version == '1':
+            self.in_file = laspy.file.File(self.in_las_path, mode='r')
+            self.scale = self.in_file.header.scale
+            self.offset = self.in_file.header.offset
+        
+        else:
+            self.in_file = laspy.read(self.in_las_path)
+            self.scale = self.in_file.header.scales
+            self.offset = self.in_file.header.offsets
+        
         
     def get_all_points(self):
         """ Get points for file (points information and coordinates)
         """
-        self.points_array = self.in_file.get_points()
+        if self.laspy_version == '1':
+            self.points_array = self.in_file.get_points()
+        else:
+            self.points_array = self.in_file.points.array
+
         self.points_number = len(self.in_file)
     
     def get_scaled_points(self):
@@ -185,7 +204,11 @@ class LiDAR(object):
     def get_points_by_class(self, classif=2):
         """ Get points array with the given classification id (ASPRS classes)
         """
-        class_points_bool = self.in_file.Classification == classif
+        if self.laspy_version == '1':
+            class_points_bool = self.in_file.Classification == classif
+        else:
+            class_points_bool = self.in_file.classification == classif
+        
         return self.points_array[class_points_bool], class_points_bool
         
     def get_points_arrays(self):
