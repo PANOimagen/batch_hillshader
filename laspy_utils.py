@@ -237,16 +237,28 @@ class LiDAR(object):
             
             self.files_utils.create_dir(self.out_dir)
             
-            out_file = File(full_path, mode='w', header=self.in_file.header)
-            out_file.points = self.in_file.points[
-                    self.in_file.return_num == 1]
-            out_file.close()
+            if self.laspy_version == '1': 
+                out_file = laspy.file.File(full_path, mode='w', header=self.in_file.header)
+                out_file.points = self.in_file.points[
+                        self.in_file.return_num == 1]
+                out_file.close()
             
-            #leo el archivo
-            in_file = File(full_path, mode='r')
-            scale = in_file.header.scale
-            offset = in_file.header.offset
-                            
+                #leo el archivo
+                in_file = laspy.file.File(full_path, mode='r')
+                scale = in_file.header.scale
+                offset = in_file.header.offset
+            else:
+                self.in_file = laspy.convert(self.in_file, point_format_id=1)
+                out_file = laspy.LasData(self.in_file.header)
+                out_file.points = self.in_file.points[
+                        self.in_file.return_num == 1]
+                out_file.write(full_path)
+            
+                #leo el archivo
+                in_file = laspy.read(full_path)
+                scale = in_file.header.scale
+                offset = in_file.header.offset
+
             x = in_file.X
             y = in_file.Y
             z = in_file.Z
@@ -261,8 +273,9 @@ class LiDAR(object):
             y_array = y_dimension.reshape(size, 1)
             z_array = z_dimension
             
-            # Cerrar archivo para poder eliminarlo
-            in_file.close()
+            if self.laspy_version == '1': 
+                # Cerrar archivo para poder eliminarlo
+                in_file.close()
             
             if not self.partials_create:     
                 self.files_utils.remove_temp_file(full_path)
@@ -285,8 +298,13 @@ class LiDAR(object):
             self.out_full_path = os.path.join(self.out_dir, ('Terrain_' + 
                                 self.templates_dict['las'].format(self.name)))
         
-        out_file = File(self.out_full_path, mode='w', 
+        if self.laspy_version == '1':
+            out_file = laspy.fileFile(self.out_full_path, mode='w', 
                             header=self.in_file.header)
+        else:
+            self.in_file = laspy.convert(self.in_file, point_format_id=1)
+            out_file = laspy.LasData(self.in_file.header)              
+        
         if self.terrain:
             class_2_points, class_2_bool = self.get_points_by_class(
                     self.class_flag)
@@ -295,8 +313,12 @@ class LiDAR(object):
         elif self.surfaces:
             out_file.points = self.in_file.points[
                     self.in_file.return_num == 1]
+        if self.laspy_version == '1':
+            out_file.close()
+        else:
+            out_file.write(self.out_full_path)
+
         
-        out_file.close()
 
 class RasterizeLiDAR(object):
 
