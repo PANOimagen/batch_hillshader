@@ -323,9 +323,11 @@ class batchHillshaderDialog(QtWidgets.QDialog, FORM_CLASS):
             dirs_list = glob.glob(key_for_glob)
             indexes = []
             for directory in dirs_list:
-                fn_index = int(directory[-1])
+                _, filename = os.path.split(directory)
+                parts_filename = filename.split('_r')
+                fn_index = int(parts_filename[-1])
                 indexes.append(fn_index)
-                max_index = max(indexes)
+                max_index = max(indexes)                
             next_index = max_index + 1
             out_path = os.path.join(outPath,
                         (base_name + '_r' + str(next_index)))
