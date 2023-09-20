@@ -46,7 +46,7 @@ def merge_arrays(input_arrays, alpha_values,
     Alpha values is a list of floats between 0 and 1 with the same size as
     the list of input_arrays.'''
 
-    output = background_value * np.ones(input_arrays[0].shape, dtype = np.float)
+    output = background_value * np.ones(input_arrays[0].shape, dtype = float)
     for array, alpha in zip(input_arrays, alpha_values):
         output = array * alpha + (1 - alpha) * output
         
